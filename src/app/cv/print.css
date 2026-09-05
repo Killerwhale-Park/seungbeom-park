@@ -1,0 +1,152 @@
+.cv-print-head {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  html {
+    background: #fff !important;
+    color-scheme: light;
+  }
+
+  body {
+    display: block !important;
+    min-height: 0 !important;
+    background: #fff !important;
+    color: #111 !important;
+    line-height: 1.45;
+  }
+
+  main {
+    display: block !important;
+  }
+
+  .cv-page {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .cv-page *,
+  .cv-page *::before,
+  .cv-page *::after {
+    color: #111 !important;
+    background: transparent !important;
+    border-color: #cfcfcf !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .cv-page a {
+    text-decoration: none;
+  }
+
+  .cv-page .pulse-dot {
+    display: none !important;
+  }
+
+  .cv-print-head {
+    display: block;
+    margin-bottom: 8mm;
+    border-bottom: 0.75pt solid #111;
+    padding-bottom: 4mm;
+    break-after: avoid;
+  }
+
+  .cv-page .cv-print-name {
+    font-size: 24pt;
+    line-height: 1.05;
+  }
+
+  .cv-page .cv-print-line {
+    margin-top: 1.2mm;
+    font-size: 9.5pt;
+    color: #333 !important;
+  }
+
+  .cv-page .cv-print-meta {
+    margin-top: 3mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #666 !important;
+  }
+
+  .cv-page .cv-sections > * {
+    margin-top: 7mm !important;
+    margin-bottom: 0 !important;
+  }
+
+  .cv-page .cv-sections > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  .cv-page .cv-section-rule {
+    border-bottom: 0.75pt solid #111 !important;
+    padding-bottom: 1.5mm !important;
+    break-after: avoid;
+  }
+
+  .cv-page .cv-section-title {
+    font-size: 9pt;
+    letter-spacing: 0.18em;
+  }
+
+  .cv-page .cv-section-meta {
+    font-size: 8pt;
+    color: #666 !important;
+  }
+
+  .cv-page .cv-section > div + div {
+    margin-top: 3mm !important;
+  }
+
+  .cv-page .cv-entry {
+    display: grid;
+    grid-template-columns: 30mm minmax(0, 1fr);
+    column-gap: 6mm;
+    row-gap: 0;
+    padding: 3.5mm 0 !important;
+    break-inside: avoid;
+  }
+
+  .cv-page .cv-entry:first-child {
+    padding-top: 0 !important;
+  }
+
+  .cv-page .cv-entry:last-child {
+    padding-bottom: 0 !important;
+  }
+
+  .cv-page .cv-period {
+    font-size: 8.5pt;
+    line-height: 1.5;
+    color: #555 !important;
+  }
+
+  .cv-page h3 {
+    font-size: 12pt;
+    line-height: 1.2;
+    break-after: avoid;
+  }
+
+  .cv-page p,
+  .cv-page li {
+    font-size: 9.5pt;
+  }
+
+  .cv-page span {
+    font-size: inherit;
+  }
+
+  .cv-page .cv-status,
+  .cv-page .cv-tag {
+    font-size: 7.5pt !important;
+    padding: 0.4mm 1.4mm !important;
+    border: 0.5pt solid #999 !important;
+    color: #444 !important;
+  }
+}

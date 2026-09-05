@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme {
+  --color-night-950: #04050c;
+  --color-night-900: #080a15;
+  --color-night-800: #0d1020;
+  --color-night-700: #141830;
+  --color-night-600: #1d2340;
+
+  --color-moon-50: #f4f5fb;
+  --color-moon-200: #d8dcee;
+  --color-moon-400: #9aa1c4;
+  --color-moon-500: #6f7699;
+  --color-moon-700: #464c6b;
+
+  --color-ember-200: #ffe9bd;
+  --color-ember-300: #ffd98a;
+  --color-ember-400: #f2b45c;
+  --color-ember-500: #d98f35;
+  --color-ember-600: #a8641f;
+
+  --color-iris-300: #aab3f2;
+  --color-iris-400: #8b93e0;
+  --color-iris-500: #6a71bd;
+
+  --color-mint-300: #8fd9b0;
+
+  --font-display: var(--font-instrument-serif), Georgia, serif;
+  --font-sans: var(--font-instrument-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-night-950);
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-night-950);
+    color: var(--color-moon-200);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+    outline: 1px solid var(--color-ember-400);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-ember-500) 35%, transparent);
+    color: var(--color-moon-50);
+  }
+}
+
+@layer utilities {
+  .reveal-hidden {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+
+  .pulse-dot {
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot {
+    animation: none;
+  }
+
+  .reveal-hidden {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+}

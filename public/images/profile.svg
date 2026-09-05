@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800" role="img" aria-label="Abstract placeholder portrait">
+  <defs>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#141830" />
+      <stop offset="0.55" stop-color="#0d1020" />
+      <stop offset="1" stop-color="#080a15" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f2b45c" stop-opacity="0.22" />
+      <stop offset="0.6" stop-color="#a8641f" stop-opacity="0.07" />
+      <stop offset="1" stop-color="#a8641f" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="600" height="800" fill="url(#ground)" />
+  <circle cx="360" cy="300" r="300" fill="url(#glow)" />
+
+  <g fill="none" stroke-width="1">
+    <circle cx="360" cy="300" r="64" stroke="#ffe9bd" stroke-opacity="0.5" />
+    <circle cx="360" cy="300" r="118" stroke="#f2b45c" stroke-opacity="0.38" />
+    <circle cx="360" cy="300" r="176" stroke="#d98f35" stroke-opacity="0.3" stroke-dasharray="46 28" />
+    <circle cx="360" cy="300" r="234" stroke="#a8641f" stroke-opacity="0.34" stroke-dasharray="8 22" />
+  </g>
+
+  <g stroke="#f2b45c" stroke-opacity="0.55" stroke-width="1.5" stroke-linecap="round">
+    <line x1="360" y1="20" x2="360" y2="52" />
+    <line x1="360" y1="20" x2="360" y2="52" transform="rotate(45 360 300)" />
+    <line x1="360" y1="20" x2="360" y2="52" transform="rotate(90 360 300)" />
+    <line x1="360" y1="20" x2="360" y2="52" transform="rotate(135 360 300)" />
+    <line x1="360" y1="20" x2="360" y2="52" transform="rotate(180 360 300)" />
+    <line x1="360" y1="20" x2="360" y2="52" transform="rotate(225 360 300)" />
+    <line x1="360" y1="20" x2="360" y2="52" transform="rotate(270 360 300)" />
+    <line x1="360" y1="20" x2="360" y2="52" transform="rotate(315 360 300)" />
+  </g>
+
+  <g fill="#ffd98a">
+    <circle cx="360" cy="300" r="4.5" />
+    <circle cx="196" cy="168" r="2" fill-opacity="0.7" />
+    <circle cx="508" cy="214" r="1.6" fill-opacity="0.55" />
+    <circle cx="470" cy="470" r="2.4" fill-opacity="0.45" />
+    <circle cx="150" cy="392" r="1.6" fill-opacity="0.4" />
+    <circle cx="248" cy="80" r="1.4" fill-opacity="0.35" />
+  </g>
+
+  <g fill="#aab3f2" fill-opacity="0.5">
+    <circle cx="420" cy="120" r="1.8" />
+    <circle cx="120" cy="252" r="1.4" />
+  </g>
+
+  <line x1="76" y1="560" x2="220" y2="560" stroke="#f2b45c" stroke-opacity="0.6" stroke-width="1.5" />
+  <text x="76" y="694" fill="#f4f5fb" fill-opacity="0.92" font-family="Georgia, 'Times New Roman', serif" font-size="132" letter-spacing="4">SP</text>
+
+  <rect x="0.5" y="0.5" width="599" height="799" fill="none" stroke="#ffffff" stroke-opacity="0.1" />
+</svg>
