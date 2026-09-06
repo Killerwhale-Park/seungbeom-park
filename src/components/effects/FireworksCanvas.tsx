@@ -207,7 +207,7 @@ export function FireworksCanvas({
       let longest = 0;
 
       for (let i = 0; i < count; i += 1) {
-        const angle = (i / count) * TAU + randomRange(rng, -0.14, 0.14);
+        const angle = (i / count) * TAU + randomRange(rng, -0.34, 0.34);
         const speed =
           baseSpeed *
           randomRange(rng, tightness, tightness + (1 - tightness) * 1.6);

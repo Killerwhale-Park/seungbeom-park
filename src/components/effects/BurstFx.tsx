@@ -1,7 +1,32 @@
 "use client";
 
+import { useMemo } from "react";
+
 function fade(color: string, percent: number): string {
   return `color-mix(in oklab, ${color} ${percent}%, transparent)`;
+}
+
+type Ray = {
+  angle: number;
+  inner: number;
+  outer: number;
+  width: number;
+  alpha: number;
+};
+
+function makeRays(): Ray[] {
+  const count = 14 + Math.floor(Math.random() * 5);
+  return Array.from({ length: count }, (_, i) => {
+    const angle =
+      (i / count) * Math.PI * 2 + (Math.random() - 0.5) * (Math.PI / count) * 1.7;
+    return {
+      angle,
+      inner: 3 + Math.random() * 5,
+      outer: 18 + Math.random() * 16,
+      width: 1 + Math.random() * 1.3,
+      alpha: 0.55 + Math.random() * 0.45,
+    };
+  });
 }
 
 type BurstFxProps = {
@@ -12,6 +37,8 @@ type BurstFxProps = {
 };
 
 export function BurstFx({ x, y, color, fixed = false }: BurstFxProps) {
+  const rays = useMemo(() => makeRays(), []);
+
   return (
     <span
       aria-hidden="true"
@@ -25,26 +52,36 @@ export function BurstFx({ x, y, color, fixed = false }: BurstFxProps) {
         }}
       />
       <svg
-        width="72"
-        height="72"
-        viewBox="-36 -36 72 72"
+        width="80"
+        height="80"
+        viewBox="-40 -40 80 80"
         className="sky-burst-ray absolute -translate-x-1/2 -translate-y-1/2"
       >
-        {Array.from({ length: 10 }, (_, i) => {
-          const angle = (i / 10) * Math.PI * 2;
-          return (
-            <line
-              key={i}
-              x1={Math.cos(angle) * 6}
-              y1={Math.sin(angle) * 6}
-              x2={Math.cos(angle) * 32}
-              y2={Math.sin(angle) * 32}
-              style={{ stroke: color }}
-              strokeWidth="1.8"
-              strokeLinecap="round"
+        {rays.map((ray, i) => (
+          <line
+            key={i}
+            x1={Math.cos(ray.angle) * ray.inner}
+            y1={Math.sin(ray.angle) * ray.inner}
+            x2={Math.cos(ray.angle) * ray.outer}
+            y2={Math.sin(ray.angle) * ray.outer}
+            style={{ stroke: color }}
+            strokeWidth={ray.width}
+            strokeLinecap="round"
+            opacity={ray.alpha}
+          />
+        ))}
+        {rays
+          .filter((_, i) => i % 3 === 0)
+          .map((ray, i) => (
+            <circle
+              key={`tip-${i}`}
+              cx={Math.cos(ray.angle) * (ray.outer + 3)}
+              cy={Math.sin(ray.angle) * (ray.outer + 3)}
+              r={1.1}
+              style={{ fill: color }}
+              opacity={ray.alpha * 0.9}
             />
-          );
-        })}
+          ))}
       </svg>
     </span>
   );
