@@ -44,7 +44,7 @@ export function ReviewPipeline({ status, className }: ReviewPipelineProps) {
                   aria-hidden="true"
                   className={`block rounded-full ${
                     isCurrent
-                      ? "pulse-dot size-[9px] bg-ember-300 shadow-[0_0_10px_rgba(255,217,138,0.8)]"
+                      ? "pulse-dot size-[9px] bg-ember-300 shadow-[0_0_10px_var(--color-ember-300)]"
                       : reached
                         ? "size-[7px] bg-ember-500/80"
                         : "size-[7px] border border-white/20"

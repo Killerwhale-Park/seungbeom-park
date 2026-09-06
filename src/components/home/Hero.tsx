@@ -57,23 +57,23 @@ export function Hero({
     <section className="relative flex min-h-[92svh] flex-col overflow-hidden">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(180deg,#04050c_0%,#070a18_38%,#0a0d1c_64%,#171226_100%)]"
+        className="hero-sky pointer-events-none absolute inset-0 z-0"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0"
+        className="star-field pointer-events-none absolute inset-0 z-0"
         style={{ backgroundImage: starField }}
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[45%] bg-[radial-gradient(120%_100%_at_50%_100%,rgba(168,100,31,0.2),transparent_70%)]"
+        className="hero-glow pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[45%]"
       />
 
       <FireworksCanvas className="absolute inset-0 z-10" />
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-20 bg-[linear-gradient(100deg,rgba(4,5,12,0.82)_0%,rgba(4,5,12,0.45)_38%,rgba(4,5,12,0)_74%)]"
+        className="hero-scrim pointer-events-none absolute inset-0 z-20"
       />
 
       <Skyline className="absolute inset-x-0 bottom-0 z-30" />

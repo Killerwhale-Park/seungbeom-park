@@ -33,7 +33,7 @@ Every editable thing maps to one file. Types are enforced by `src/lib/types.ts`,
 | CV "last updated" date | `src/data/profile.ts` (`cvLastUpdated`) |
 | Publications, authors, venues, review status | `src/data/publications.ts` |
 | News items on the home page | `src/data/news.ts` |
-| Projects | `src/data/projects.ts` |
+| Projects (page currently shows a coming-soon panel) | `src/data/projects.ts` |
 | Degrees, periods, GPA | `src/data/education.ts` |
 | Scholarships and awards | `src/data/awards.ts` |
 | English test scores (TOEIC, TOEFL, IELTS) | `src/data/testScores.ts` |
@@ -46,6 +46,7 @@ Notes on the lists:
 - Dates are plain strings. Use `YYYY-MM` for periods and news, `YYYY-MM-DD` for `cvLastUpdated`.
 - Every item needs a unique `id` within its own file.
 - A publication with `anonymized: true` shows its `note` (for example, a double-blind withholding notice) under the title. Once a paper is accepted, set the real title, drop `anonymized` and `note`, and change `status` to `accepted` or `published`.
+- The projects page renders a coming-soon panel for now. When real entries are ready, swap `ComingSoon` back to `ProjectGrid` in `src/app/projects/page.tsx` (the grid component and `src/data/projects.ts` are still in place).
 - Optional publication fields: `bibtex` adds a copy-to-clipboard button to the card, `abstract` shows when a card is expanded. In the publications list, clicking a card expands it to show the review pipeline (Draft, In review, Accepted, Published) with the current stage highlighted. The Sky view toggle shows the same record as fireworks over the skyline by year: clicking the sky fires a rocket, and hitting a paper opens its card.
 - Publication `status` drives the colored pill: `published`, `accepted`, `under-review`, `preprint`, `in-preparation`. Mark yourself in an author list with `isSelf: true` so your name is highlighted and first-author counts stay correct.
 

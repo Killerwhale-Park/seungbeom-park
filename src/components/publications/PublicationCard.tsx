@@ -1,56 +1,150 @@
 "use client";
 
-import { useId, useState } from "react";
-import { ChevronDown } from "lucide-react";
-import type { Publication } from "@/lib/types";
+import { useEffect, useRef, useState } from "react";
+import { Plus, X } from "lucide-react";
+import type { Publication, PublicationStatus } from "@/lib/types";
 import { LinkRow } from "@/components/ui/LinkRow";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { BurstFx } from "@/components/effects/BurstFx";
 import { CopyBibtexButton } from "@/components/publications/CopyBibtexButton";
 import { ReviewPipeline } from "@/components/publications/ReviewPipeline";
 
 export type PublicationCardVariant = "default" | "compact";
 
+const STATUS_COLOR: Record<PublicationStatus, string> = {
+  published: "var(--status-accepted)",
+  accepted: "var(--status-accepted)",
+  "under-review": "var(--status-review)",
+  preprint: "var(--status-preprint)",
+  "in-preparation": "var(--status-draft)",
+};
+
+const WITHHELD_SUMMARY =
+  "Details are withheld while this paper is under double-blind review. A full summary will appear here once the decision is out.";
+
+const FLIGHT_MS = 550;
+
+type Fx = {
+  x: number;
+  y: number;
+  phase: "flight" | "burst";
+};
+
+function CardRocket({ fx, onArrive }: { fx: Fx; onArrive: () => void }) {
+  const [flying, setFlying] = useState(false);
+  const [launchY] = useState(() => window.innerHeight + 24);
+  const arrived = useRef(false);
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() =>
+      requestAnimationFrame(() => setFlying(true)),
+    );
+    const safety = window.setTimeout(() => {
+      if (!arrived.current) {
+        arrived.current = true;
+        onArrive();
+      }
+    }, FLIGHT_MS + 200);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(safety);
+    };
+  }, [onArrive]);
+
+  return (
+    <span
+      aria-hidden="true"
+      className="pointer-events-none fixed left-0 top-0 z-30 block"
+      style={{
+        transform: flying
+          ? `translate(${fx.x}px, ${fx.y}px)`
+          : `translate(${fx.x}px, ${launchY}px)`,
+        transition: `transform ${FLIGHT_MS}ms cubic-bezier(0.22, 0.9, 0.32, 1)`,
+      }}
+      onTransitionEnd={() => {
+        if (!arrived.current) {
+          arrived.current = true;
+          onArrive();
+        }
+      }}
+    >
+      <span
+        className="block size-[4px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-ember-200"
+        style={{ boxShadow: "0 0 10px var(--color-ember-200)" }}
+      />
+    </span>
+  );
+}
+
 type PublicationCardProps = {
   publication: Publication;
   variant?: PublicationCardVariant;
-  expandable?: boolean;
+  reveal?: boolean;
   className?: string;
 };
 
 export function PublicationCard({
   publication,
   variant = "default",
-  expandable = false,
+  reveal = false,
   className,
 }: PublicationCardProps) {
   const compact = variant === "compact";
-  const canExpand = expandable && !compact;
+  const canReveal = reveal && !compact;
+  const cardRef = useRef<HTMLElement>(null);
+  const burstTimer = useRef<number>(0);
   const [open, setOpen] = useState(false);
-  const detailId = useId();
+  const [origin, setOrigin] = useState({ x: 92, y: 14 });
+  const [fx, setFx] = useState<Fx | null>(null);
 
+  useEffect(() => () => window.clearTimeout(burstTimer.current), []);
+
+  const statusColor = STATUS_COLOR[publication.status];
   const venueLabel = publication.venue.abbreviation
     ? `${publication.venue.name} (${publication.venue.abbreviation})`
     : publication.venue.name;
 
-  const summary = (
+  const fire = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (fx) return;
+    if (open) {
+      setOpen(false);
+      return;
+    }
+    const card = cardRef.current;
+    if (!card) return;
+    const button = event.currentTarget.getBoundingClientRect();
+    const bx = button.left + button.width / 2;
+    const by = button.top + button.height / 2;
+    const rect = card.getBoundingClientRect();
+    setOrigin({
+      x: ((bx - rect.left) / rect.width) * 100,
+      y: ((by - rect.top) / rect.height) * 100,
+    });
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setOpen(true);
+      return;
+    }
+    setFx({ x: bx, y: by, phase: "flight" });
+  };
+
+  const onArrive = () => {
+    setFx((current) => (current ? { ...current, phase: "burst" } : null));
+    setOpen(true);
+    window.clearTimeout(burstTimer.current);
+    burstTimer.current = window.setTimeout(() => setFx(null), 700);
+  };
+
+  const front = (
     <>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <StatusPill status={publication.status} />
         <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moon-500">
           {publication.type.toUpperCase()}
         </span>
-        {canExpand ? (
-          <ChevronDown
-            size={16}
-            strokeWidth={1.5}
-            aria-hidden="true"
-            className={`ml-auto text-moon-500 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-          />
-        ) : null}
       </div>
 
       <h3
-        className={`mt-4 font-display font-semibold leading-snug tracking-[-0.015em] text-moon-50 ${compact ? "text-[1.0625rem]" : "text-[1.2rem] sm:text-[1.3rem]"}`}
+        className={`mt-4 font-display font-semibold leading-snug tracking-[-0.015em] text-moon-50 ${compact ? "text-[1.0625rem]" : "text-[1.2rem] sm:text-[1.3rem]"} ${canReveal ? "pr-10" : ""}`}
       >
         {publication.title}
       </h3>
@@ -93,45 +187,6 @@ export function PublicationCard({
           {publication.awards.join(" / ")}
         </p>
       ) : null}
-    </>
-  );
-
-  return (
-    <article
-      className={`flex flex-col rounded-[2px] border border-white/8 bg-night-900 transition-[border-color,box-shadow] duration-300 hover:border-ember-500/30 hover:shadow-[0_0_40px_-12px_rgba(217,143,53,0.45)] ${compact ? "p-5" : "p-6 sm:p-7"} ${className ?? ""}`}
-    >
-      {canExpand ? (
-        <button
-          type="button"
-          aria-expanded={open}
-          aria-controls={detailId}
-          onClick={() => setOpen((value) => !value)}
-          className="-m-2 cursor-pointer rounded-[2px] p-2 text-left"
-        >
-          {summary}
-        </button>
-      ) : (
-        summary
-      )}
-
-      {canExpand ? (
-        <div
-          id={detailId}
-          className={`grid transition-[grid-template-rows] duration-400 ease-out ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-        >
-          <div className="overflow-hidden">
-            <ReviewPipeline
-              status={publication.status}
-              className="mt-6 border-t border-white/8 pt-6"
-            />
-            {publication.abstract ? (
-              <p className="mt-4 max-w-[68ch] text-[14px] leading-relaxed text-moon-400">
-                {publication.abstract}
-              </p>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
 
       {publication.links || publication.bibtex ? (
         <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -140,6 +195,76 @@ export function PublicationCard({
             <CopyBibtexButton bibtex={publication.bibtex} />
           ) : null}
         </div>
+      ) : null}
+    </>
+  );
+
+  if (!canReveal) {
+    return (
+      <article
+        className={`flex flex-col rounded-[2px] border border-white/8 bg-night-900 transition-[border-color,box-shadow] duration-300 hover:border-ember-500/30 hover:shadow-[0_0_40px_-12px_rgba(217,143,53,0.45)] ${compact ? "p-5" : "p-6 sm:p-7"} ${className ?? ""}`}
+      >
+        {front}
+      </article>
+    );
+  }
+
+  return (
+    <article
+      ref={cardRef}
+      className={`relative overflow-hidden rounded-[2px] border border-white/8 bg-night-900 transition-[border-color,box-shadow] duration-300 hover:border-ember-500/30 hover:shadow-[0_0_40px_-12px_rgba(217,143,53,0.45)] ${className ?? ""}`}
+    >
+      <div className="grid">
+        <div
+          inert={open || undefined}
+          className="col-start-1 row-start-1 p-6 sm:p-7"
+        >
+          {front}
+        </div>
+
+        <div
+          inert={!open || undefined}
+          className="col-start-1 row-start-1 bg-night-800 p-6 sm:p-7"
+          style={{
+            clipPath: `circle(${open ? "142%" : "0%"} at ${origin.x}% ${origin.y}%)`,
+            transition: "clip-path 700ms cubic-bezier(0.22, 0.9, 0.32, 1)",
+          }}
+        >
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ember-400">
+            Summary
+          </p>
+          <h4 className="mt-3 pr-10 font-display text-[1.05rem] font-semibold leading-snug tracking-[-0.015em] text-moon-50">
+            {publication.title}
+          </h4>
+          <p className="mt-3 max-w-[68ch] text-[14px] leading-relaxed text-moon-400">
+            {publication.abstract ?? WITHHELD_SUMMARY}
+          </p>
+          <ReviewPipeline
+            status={publication.status}
+            className="mt-7 border-t border-white/8 pt-6"
+          />
+        </div>
+      </div>
+
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-label={open ? "Close summary" : "Reveal summary with a firework"}
+        onClick={fire}
+        className="absolute top-5 right-5 z-20 flex size-8 cursor-pointer items-center justify-center rounded-[2px] border border-white/10 text-moon-400 transition-colors hover:border-ember-500/50 hover:text-ember-300"
+      >
+        {open ? (
+          <X size={15} strokeWidth={1.5} aria-hidden="true" />
+        ) : (
+          <Plus size={15} strokeWidth={1.5} aria-hidden="true" />
+        )}
+      </button>
+
+      {fx && fx.phase === "flight" ? (
+        <CardRocket fx={fx} onArrive={onArrive} />
+      ) : null}
+      {fx && fx.phase === "burst" ? (
+        <BurstFx x={fx.x} y={fx.y} color={statusColor} fixed />
       ) : null}
     </article>
   );

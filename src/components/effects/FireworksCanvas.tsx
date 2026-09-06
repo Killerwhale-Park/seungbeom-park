@@ -60,15 +60,34 @@ const FAMILIES: readonly (readonly string[])[] = [
   ["#7de8dc", "#5dd6c8", "#c2f7f1"],
 ];
 
+const LIGHT_FAMILIES: readonly (readonly string[])[] = [
+  ["#b8741a", "#a05a12", "#d99444"],
+  ["#5c617e", "#464c6b", "#7c81a0"],
+  ["#c9342a", "#a8241c", "#e0564a"],
+  ["#188a4f", "#106b3b", "#27a565"],
+  ["#1f6fd4", "#1657a8", "#3c8ae8"],
+  ["#7a2fc2", "#5f2299", "#9350d9"],
+  ["#d33f7e", "#b02861", "#e26a9d"],
+  ["#0f9490", "#0b736f", "#2ab3ae"],
+];
+
 const FAMILY_WEIGHTS = [0.24, 0.12, 0.13, 0.13, 0.13, 0.11, 0.08, 0.06];
 
+function isLightTheme(): boolean {
+  return (
+    typeof document !== "undefined" &&
+    document.documentElement.dataset.theme === "light"
+  );
+}
+
 function familyFor(rng: Rng): readonly string[] {
+  const families = isLightTheme() ? LIGHT_FAMILIES : FAMILIES;
   let roll = rng();
-  for (let i = 0; i < FAMILIES.length; i += 1) {
+  for (let i = 0; i < families.length; i += 1) {
     roll -= FAMILY_WEIGHTS[i];
-    if (roll <= 0) return FAMILIES[i];
+    if (roll <= 0) return families[i];
   }
-  return FAMILIES[0];
+  return families[0];
 }
 
 function hexAlpha(hex: string, alpha: number): string {
@@ -139,7 +158,7 @@ export function FireworksCanvas({
       ];
       ctx.globalCompositeOperation = "source-over";
       ctx.clearRect(0, 0, width, height);
-      ctx.globalCompositeOperation = "lighter";
+      ctx.globalCompositeOperation = isLightTheme() ? "source-over" : "lighter";
       for (const spot of spots) {
         const cx = spot[0] * width;
         const cy = spot[1] * height;
@@ -282,13 +301,14 @@ export function FireworksCanvas({
     }
 
     function render() {
-      ctx.globalCompositeOperation = "lighter";
+      const light = isLightTheme();
+      ctx.globalCompositeOperation = light ? "source-over" : "lighter";
 
       for (const f of flashes) {
         const t = f.life / f.maxLife;
         const radius = f.radius * (1.25 - t * 0.5);
         const glow = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, radius);
-        glow.addColorStop(0, hexAlpha(f.color, 0.34 * t));
+        glow.addColorStop(0, hexAlpha(f.color, (light ? 0.2 : 0.34) * t));
         glow.addColorStop(0.5, hexAlpha(f.color, 0.1 * t));
         glow.addColorStop(1, hexAlpha(f.color, 0));
         ctx.globalAlpha = 1;
@@ -328,12 +348,12 @@ export function FireworksCanvas({
 
       for (const r of rockets) {
         const glow = ctx.createRadialGradient(r.x, r.y, 0, r.x, r.y, 10);
-        glow.addColorStop(0, "rgba(255, 233, 189, 0.5)");
-        glow.addColorStop(1, "rgba(255, 233, 189, 0)");
+        glow.addColorStop(0, light ? "rgba(138, 79, 19, 0.45)" : "rgba(255, 233, 189, 0.5)");
+        glow.addColorStop(1, light ? "rgba(138, 79, 19, 0)" : "rgba(255, 233, 189, 0)");
         ctx.globalAlpha = 1;
         ctx.fillStyle = glow;
         ctx.fillRect(r.x - 10, r.y - 10, 20, 20);
-        ctx.fillStyle = "#fff3d6";
+        ctx.fillStyle = light ? "#6e3d0c" : "#fff3d6";
         ctx.beginPath();
         ctx.arc(r.x, r.y, 1.5, 0, TAU);
         ctx.fill();
@@ -355,9 +375,9 @@ export function FireworksCanvas({
             randomRange(rng, 0.14, 0.44) * height,
             1,
           );
-          nextLaunch = now + randomRange(rng, 1400, 2600);
+          nextLaunch = now + randomRange(rng, 3200, 6400);
         } else {
-          nextLaunch = now + 400;
+          nextLaunch = now + 600;
         }
       }
 
@@ -383,7 +403,7 @@ export function FireworksCanvas({
       if (visible && !document.hidden) {
         if (raf === 0) {
           last = performance.now();
-          nextLaunch = last + 500;
+          nextLaunch = last + 900;
           raf = requestAnimationFrame(frame);
         }
       } else {
@@ -398,9 +418,20 @@ export function FireworksCanvas({
     sizeObserver.observe(canvas);
     measure();
 
+    const themeObserver = new MutationObserver(() => {
+      if (reduced) drawStatic();
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
     if (reduced) {
       drawStatic();
-      return () => sizeObserver.disconnect();
+      return () => {
+        sizeObserver.disconnect();
+        themeObserver.disconnect();
+      };
     }
 
     const viewObserver = new IntersectionObserver(
@@ -430,6 +461,7 @@ export function FireworksCanvas({
     return () => {
       pause();
       sizeObserver.disconnect();
+      themeObserver.disconnect();
       viewObserver.disconnect();
       document.removeEventListener("visibilitychange", sync);
       canvas.removeEventListener("pointerdown", onPointerDown);

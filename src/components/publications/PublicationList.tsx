@@ -142,7 +142,7 @@ export function PublicationList({
                   <PublicationCard
                     key={publication.id}
                     publication={publication}
-                    expandable
+                    reveal
                   />
                 ))}
               </div>

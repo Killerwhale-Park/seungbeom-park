@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Publication, PublicationStatus } from "@/lib/types";
 import { hashSeed, mulberry32, randomRange } from "@/lib/random";
 import { Skyline } from "@/components/effects/Skyline";
+import { BurstFx } from "@/components/effects/BurstFx";
 import { PublicationCard } from "@/components/publications/PublicationCard";
 import { isFirstAuthor } from "@/lib/publications";
 
@@ -30,12 +31,16 @@ type Shot = {
 };
 
 const STATUS_COLOR: Record<PublicationStatus, string> = {
-  published: "#8fd9b0",
-  accepted: "#8fd9b0",
-  "under-review": "#ffd98a",
-  preprint: "#aab3f2",
-  "in-preparation": "#6f7699",
+  published: "var(--status-accepted)",
+  accepted: "var(--status-accepted)",
+  "under-review": "var(--status-review)",
+  preprint: "var(--status-preprint)",
+  "in-preparation": "var(--status-draft)",
 };
+
+function fade(color: string, percent: number): string {
+  return `color-mix(in oklab, ${color} ${percent}%, transparent)`;
+}
 
 const STATUS_BAND: Record<PublicationStatus, [number, number]> = {
   published: [18, 32],
@@ -127,7 +132,7 @@ function NodeGlyph({
           aria-hidden="true"
           className="absolute left-1/2 top-[7px] h-[16px] w-[2px] -translate-x-1/2"
           style={{
-            background: `linear-gradient(to bottom, ${color}b0, transparent)`,
+            background: `linear-gradient(to bottom, ${fade(color, 70)}, transparent)`,
           }}
         />
       </span>
@@ -138,7 +143,7 @@ function NodeGlyph({
     return (
       <span
         className="block size-[5px] rounded-full"
-        style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}80` }}
+        style={{ backgroundColor: color, boxShadow: `0 0 8px ${fade(color, 50)}` }}
       />
     );
   }
@@ -147,7 +152,7 @@ function NodeGlyph({
   const length = status === "published" ? 13 : 11;
   return (
     <svg width="30" height="30" viewBox="-15 -15 30 30" aria-hidden="true">
-      <circle r="10" fill={color} opacity="0.12" />
+      <circle r="10" style={{ fill: color }} opacity="0.12" />
       {Array.from({ length: rays }, (_, i) => {
         const angle = (i / rays) * Math.PI * 2 + (rays === 4 ? Math.PI / 4 : 0);
         return (
@@ -157,54 +162,15 @@ function NodeGlyph({
             y1={Math.sin(angle) * 4}
             x2={Math.cos(angle) * length}
             y2={Math.sin(angle) * length}
-            stroke={color}
+            style={{ stroke: color }}
             strokeWidth="1.6"
             strokeLinecap="round"
             opacity="0.85"
           />
         );
       })}
-      <circle r="2.8" fill={color} />
+      <circle r="2.8" style={{ fill: color }} />
     </svg>
-  );
-}
-
-function BurstEffect({ x, y, color }: { x: number; y: number; color: string }) {
-  return (
-    <span
-      aria-hidden="true"
-      className="pointer-events-none absolute left-0 top-0 z-30"
-      style={{ transform: `translate(${x}px, ${y}px)` }}
-    >
-      <span
-        className="sky-burst-flash absolute block size-[64px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{
-          background: `radial-gradient(circle, ${color}66 0%, transparent 70%)`,
-        }}
-      />
-      <svg
-        width="72"
-        height="72"
-        viewBox="-36 -36 72 72"
-        className="sky-burst-ray absolute -translate-x-1/2 -translate-y-1/2"
-      >
-        {Array.from({ length: 10 }, (_, i) => {
-          const angle = (i / 10) * Math.PI * 2;
-          return (
-            <line
-              key={i}
-              x1={Math.cos(angle) * 6}
-              y1={Math.sin(angle) * 6}
-              x2={Math.cos(angle) * 32}
-              y2={Math.sin(angle) * 32}
-              stroke={color}
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            />
-          );
-        })}
-      </svg>
-    </span>
   );
 }
 
@@ -247,7 +213,7 @@ function Rocket({ shot, onArrive }: { shot: Shot; onArrive: () => void }) {
     >
       <span
         className="block size-[4px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-ember-200"
-        style={{ boxShadow: "0 0 10px #ffe9bd" }}
+        style={{ boxShadow: "0 0 10px var(--color-ember-200)" }}
       />
     </span>
   );
@@ -296,7 +262,7 @@ export function PublicationSky({
 
     const color = targetId
       ? STATUS_COLOR[publications.find((p) => p.id === targetId)!.status]
-      : "#d8dcee";
+      : "var(--color-moon-400)";
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       if (targetId) setSelectedId(targetId);
@@ -328,11 +294,11 @@ export function PublicationSky({
       <div
         ref={containerRef}
         onClick={(event) => fire(event.clientX, event.clientY)}
-        className="relative h-[360px] cursor-crosshair overflow-hidden rounded-[2px] border border-white/8 bg-[linear-gradient(180deg,#04050c_0%,#080b18_52%,#12101f_100%)] sm:h-[420px]"
+        className="panel-sky relative h-[360px] cursor-crosshair overflow-hidden rounded-[2px] border border-white/8 sm:h-[420px]"
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
+          className="star-field pointer-events-none absolute inset-0"
           style={{ backgroundImage: starField }}
         />
 
@@ -386,7 +352,7 @@ export function PublicationSky({
                 <span
                   aria-hidden="true"
                   className="absolute size-[40px] rounded-full border"
-                  style={{ borderColor: `${color}80` }}
+                  style={{ borderColor: fade(color, 50) }}
                 />
               ) : null}
               <span className="transition-transform duration-200 group-hover:scale-125 group-focus-visible:scale-125">
@@ -410,7 +376,7 @@ export function PublicationSky({
           <Rocket shot={shot} onArrive={onArrive} />
         ) : null}
         {shot && shot.phase === "burst" ? (
-          <BurstEffect x={shot.x} y={shot.y} color={shot.color} />
+          <BurstFx x={shot.x} y={shot.y} color={shot.color} />
         ) : null}
 
         <div className="pointer-events-none absolute bottom-4 left-5 flex flex-col gap-1.5 font-mono text-[10px] tracking-[0.1em] text-moon-500">
@@ -431,7 +397,7 @@ export function PublicationSky({
                     y1={Math.sin(angle) * 1.5}
                     x2={Math.cos(angle) * 4.5}
                     y2={Math.sin(angle) * 4.5}
-                    stroke="#8fd9b0"
+                    style={{ stroke: "var(--status-accepted)" }}
                     strokeWidth="1"
                   />
                 );

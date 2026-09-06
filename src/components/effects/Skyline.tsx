@@ -9,11 +9,18 @@ type SkylineProps = {
   parallax?: boolean;
 };
 
+type WindowTone = "warm" | "cool";
+
 type LitWindow = {
   x: number;
   y: number;
-  color: string;
+  tone: WindowTone;
   alpha: number;
+};
+
+const TONE_FILL: Record<WindowTone, string> = {
+  warm: "var(--skyline-window)",
+  cool: "var(--skyline-window-cool)",
 };
 
 type Building = {
@@ -41,9 +48,7 @@ type LayerOptions = {
 const VIEW_W = 1920;
 const BACK_H = 340;
 const FRONT_H = 280;
-const WATER_Y = 254;
-const EMBER = "#ffd98a";
-const IRIS = "#aab3f2";
+const WATER_Y = 234;
 
 function litWindows(
   rng: Rng,
@@ -60,7 +65,7 @@ function litWindows(
       lit.push({
         x: Math.round(x),
         y: Math.round(y),
-        color: cool ? IRIS : EMBER,
+        tone: cool ? "cool" : "warm",
         alpha: cool ? 0.42 : Math.round(randomRange(rng, 0.32, 0.58) * 100) / 100,
       });
     }
@@ -133,7 +138,7 @@ const tower63Windows: LitWindow[] = (() => {
       lit.push({
         x: Math.round(left + 5 + i * ((w - 10) / 4)),
         y,
-        color: EMBER,
+        tone: "warm",
         alpha: Math.round(randomRange(rng, 0.22, 0.4) * 100) / 100,
       });
     }
@@ -141,7 +146,7 @@ const tower63Windows: LitWindow[] = (() => {
   return lit;
 })();
 
-const LOTTE = { cx: 1568, baseW: 74, tipW: 12, top: 26, baseline: WATER_Y };
+const LOTTE = { cx: 1568, baseW: 68, tipW: 11, top: 14, baseline: WATER_Y };
 
 const lotteWindows: LitWindow[] = (() => {
   const rng = mulberry32(0x10773e);
@@ -156,7 +161,7 @@ const lotteWindows: LitWindow[] = (() => {
       lit.push({
         x: Math.round(LOTTE.cx - w / 2 + 4 + i * ((w - 8) / Math.max(1, columns - 1) || 1)),
         y,
-        color: cool ? IRIS : EMBER,
+        tone: cool ? "cool" : "warm",
         alpha: Math.round(randomRange(rng, 0.18, 0.36) * 100) / 100,
       });
     }
@@ -177,29 +182,45 @@ const lottePath = (() => {
   ].join(" ");
 })();
 
-const BRIDGE = { from: 300, to: 960, deckY: 244 };
+const BRIDGE = { from: 280, to: 1040, deckY: 224 };
 
 const bridgeLights: number[] = (() => {
   const xs: number[] = [];
-  for (let x = BRIDGE.from + 20; x <= BRIDGE.to - 20; x += 44) xs.push(x);
+  for (let x = BRIDGE.from + 20; x <= BRIDGE.to - 20; x += 40) xs.push(x);
   return xs;
 })();
 
-const reflections: { x: number; h: number; color: string; alpha: number }[] =
+const FOUNTAINS: { x: number; dir: 1 | -1 }[] = [
+  { x: 400, dir: 1 },
+  { x: 520, dir: -1 },
+  { x: 640, dir: 1 },
+  { x: 760, dir: -1 },
+  { x: 880, dir: 1 },
+];
+
+const FOUNTAIN_DROPS: [number, number][] = [
+  [7, 3],
+  [12, 8],
+  [16, 14],
+  [18, 21],
+  [19, 28],
+];
+
+const reflections: { x: number; h: number; tone: WindowTone; alpha: number }[] =
   (() => {
     const rng = mulberry32(0x4a11fe);
     const list = bridgeLights.map((x) => ({
       x,
-      h: Math.round(randomRange(rng, 6, 13)),
-      color: EMBER,
-      alpha: 0.12,
+      h: Math.round(randomRange(rng, 9, 20)),
+      tone: "warm" as WindowTone,
+      alpha: 0.16,
     }));
-    for (const x of [LOTTE.cx - 12, LOTTE.cx + 6, 1620, 120, 1050, 1820]) {
+    for (const x of [LOTTE.cx - 12, LOTTE.cx + 6, 1620, 120, 1050, 1180, 1420, 1820]) {
       list.push({
         x,
-        h: Math.round(randomRange(rng, 8, 16)),
-        color: rng() < 0.3 ? IRIS : EMBER,
-        alpha: 0.1,
+        h: Math.round(randomRange(rng, 12, 26)),
+        tone: rng() < 0.3 ? "cool" : "warm",
+        alpha: 0.12,
       });
     }
     return list;
@@ -215,7 +236,7 @@ function Layer({
   baseline: number;
 }) {
   return (
-    <g fill={fill}>
+    <g style={{ fill }}>
       {buildings.map((b, i) => (
         <Fragment key={i}>
           <rect x={b.x} y={b.y} width={b.w} height={baseline - b.y + 10} />
@@ -236,7 +257,7 @@ function Layer({
               y={b.y - b.spire - 2}
               width={4}
               height={4}
-              fill={EMBER}
+              style={{ fill: TONE_FILL.warm }}
               opacity={0.5}
             />
           ) : null}
@@ -247,7 +268,7 @@ function Layer({
               y={w.y}
               width={3}
               height={4}
-              fill={w.color}
+              style={{ fill: TONE_FILL[w.tone] }}
               opacity={w.alpha}
             />
           ))}
@@ -259,16 +280,17 @@ function Layer({
 
 function NamsanTower() {
   return (
-    <g fill="#0c0f20">
-      <rect x={404} y={156} width={32} height={14} />
-      <rect x={417} y={94} width={6} height={64} />
-      <rect x={406} y={78} width={28} height={16} rx={3} />
-      <rect x={409} y={96} width={22} height={3} />
-      <rect x={419} y={50} width={2} height={28} />
-      <rect x={417.5} y={46} width={5} height={4} fill={EMBER} opacity={0.7} />
-      <rect x={411} y={83} width={4} height={3} fill={EMBER} opacity={0.5} />
-      <rect x={419} y={83} width={4} height={3} fill={EMBER} opacity={0.45} />
-      <rect x={427} y={83} width={4} height={3} fill={EMBER} opacity={0.5} />
+    <g style={{ fill: "var(--skyline-tower)" }}>
+      <rect x={398} y={152} width={44} height={16} />
+      <rect x={408} y={144} width={24} height={8} />
+      <rect x={416} y={86} width={8} height={58} />
+      <rect x={403} y={64} width={34} height={20} rx={4} />
+      <rect x={406} y={86} width={28} height={3} />
+      <rect x={418.5} y={28} width={3} height={36} />
+      <rect x={417} y={24} width={6} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.75} />
+      <rect x={408} y={71} width={5} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.55} />
+      <rect x={417} y={71} width={5} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.45} />
+      <rect x={426} y={71} width={5} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.55} />
     </g>
   );
 }
@@ -279,7 +301,7 @@ function Building63() {
     <g>
       <polygon
         points={`${x + (baseW - topW) / 2},${top} ${x + (baseW + topW) / 2},${top} ${x + baseW},${baseline} ${x},${baseline}`}
-        fill="#0b0e1d"
+        style={{ fill: "var(--skyline-back)" }}
       />
       {tower63Windows.map((w, i) => (
         <rect
@@ -288,7 +310,7 @@ function Building63() {
           y={w.y}
           width={2.5}
           height={3.5}
-          fill={w.color}
+          style={{ fill: TONE_FILL[w.tone] }}
           opacity={w.alpha}
         />
       ))}
@@ -299,10 +321,10 @@ function Building63() {
 function LotteTower() {
   return (
     <g>
-      <path d={lottePath} fill="#070912" />
-      <rect x={LOTTE.cx - 7} y={8} width={3} height={20} fill="#070912" />
-      <rect x={LOTTE.cx + 4} y={8} width={3} height={20} fill="#070912" />
-      <rect x={LOTTE.cx - 1.5} y={30} width={3} height={3} fill={EMBER} opacity={0.6} />
+      <path d={lottePath} style={{ fill: "var(--skyline-front)" }} />
+      <rect x={LOTTE.cx - 7} y={8} width={3} height={20} style={{ fill: "var(--skyline-front)" }} />
+      <rect x={LOTTE.cx + 4} y={8} width={3} height={20} style={{ fill: "var(--skyline-front)" }} />
+      <rect x={LOTTE.cx - 1.5} y={30} width={3} height={3} style={{ fill: TONE_FILL.warm }} opacity={0.6} />
       {lotteWindows.map((w, i) => (
         <rect
           key={i}
@@ -310,7 +332,7 @@ function LotteTower() {
           y={w.y}
           width={2.5}
           height={4}
-          fill={w.color}
+          style={{ fill: TONE_FILL[w.tone] }}
           opacity={w.alpha}
         />
       ))}
@@ -321,21 +343,75 @@ function LotteTower() {
 function HanRiver() {
   return (
     <g>
-      <rect x={0} y={WATER_Y} width={VIEW_W} height={FRONT_H - WATER_Y} fill="#030509" />
-      <rect x={0} y={WATER_Y} width={VIEW_W} height={1.5} fill={IRIS} opacity={0.08} />
+      <rect
+        x={0}
+        y={WATER_Y}
+        width={VIEW_W}
+        height={FRONT_H - WATER_Y}
+        style={{ fill: "var(--skyline-water)" }}
+      />
+      <rect
+        x={0}
+        y={WATER_Y}
+        width={VIEW_W}
+        height={1.5}
+        style={{ fill: TONE_FILL.cool }}
+        opacity={0.12}
+      />
+      {[
+        [90, 340, 244],
+        [820, 460, 256],
+        [1420, 320, 250],
+      ].map(([x, w, y]) => (
+        <rect
+          key={`${x}-${y}`}
+          x={x}
+          y={y}
+          width={w}
+          height={1}
+          style={{ fill: TONE_FILL.cool }}
+          opacity={0.06}
+        />
+      ))}
       <rect
         x={BRIDGE.from}
         y={BRIDGE.deckY}
         width={BRIDGE.to - BRIDGE.from}
-        height={4}
-        fill="#070912"
+        height={5}
+        style={{ fill: "var(--skyline-front)" }}
       />
-      {[380, 490, 600, 710, 820, 930].map((x) => (
-        <rect key={x} x={x} y={BRIDGE.deckY + 4} width={6} height={14} fill="#070912" />
+      {[320, 440, 560, 680, 800, 920, 1010].map((x) => (
+        <rect
+          key={x}
+          x={x}
+          y={BRIDGE.deckY + 5}
+          width={7}
+          height={26}
+          style={{ fill: "var(--skyline-front)" }}
+        />
       ))}
       {bridgeLights.map((x) => (
-        <circle key={x} cx={x} cy={BRIDGE.deckY - 1.5} r={1.4} fill={EMBER} opacity={0.55} />
+        <circle
+          key={x}
+          cx={x}
+          cy={BRIDGE.deckY - 2}
+          r={1.6}
+          style={{ fill: TONE_FILL.warm }}
+          opacity={0.6}
+        />
       ))}
+      {FOUNTAINS.map((fountain) =>
+        FOUNTAIN_DROPS.map(([dx, dy], i) => (
+          <circle
+            key={`${fountain.x}-${i}`}
+            cx={fountain.x + dx * fountain.dir}
+            cy={BRIDGE.deckY + 3 + dy}
+            r={1}
+            style={{ fill: TONE_FILL.cool }}
+            opacity={0.4 - i * 0.05}
+          />
+        )),
+      )}
       {reflections.map((r, i) => (
         <rect
           key={i}
@@ -343,7 +419,7 @@ function HanRiver() {
           y={WATER_Y + 3}
           width={1.5}
           height={r.h}
-          fill={r.color}
+          style={{ fill: TONE_FILL[r.tone] }}
           opacity={r.alpha}
         />
       ))}
@@ -431,10 +507,10 @@ export function Skyline({
         preserveAspectRatio="none"
         className={`col-start-1 row-start-1 w-full transition-transform duration-700 ease-out will-change-transform motion-reduce:transition-none ${sizes.back}`}
       >
-        <path d={RIDGE} fill="#0e1224" opacity={0.6} />
+        <path d={RIDGE} style={{ fill: "var(--skyline-ridge)" }} opacity={0.6} />
         <NamsanTower />
         <g opacity="0.8">
-          <Layer buildings={BACK} fill="#0b0e1d" baseline={BACK_H} />
+          <Layer buildings={BACK} fill="var(--skyline-back)" baseline={BACK_H} />
         </g>
         <Building63 />
       </svg>
@@ -444,7 +520,7 @@ export function Skyline({
         preserveAspectRatio="none"
         className={`col-start-1 row-start-1 w-full transition-transform duration-700 ease-out will-change-transform motion-reduce:transition-none ${sizes.front}`}
       >
-        <Layer buildings={FRONT} fill="#070912" baseline={WATER_Y} />
+        <Layer buildings={FRONT} fill="var(--skyline-front)" baseline={WATER_Y} />
         <LotteTower />
         <HanRiver />
       </svg>
