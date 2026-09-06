@@ -4,7 +4,7 @@
 
 @media print {
   @page {
-    margin: 14mm;
+    margin: 11mm 12mm;
   }
 
   html {
@@ -17,7 +17,7 @@
     min-height: 0 !important;
     background: #fff !important;
     color: #111 !important;
-    line-height: 1.45;
+    line-height: 1.32;
   }
 
   main {
@@ -50,33 +50,33 @@
 
   .cv-print-head {
     display: block;
-    margin-bottom: 8mm;
+    margin-bottom: 4.5mm;
     border-bottom: 0.75pt solid #111;
-    padding-bottom: 4mm;
+    padding-bottom: 2.5mm;
     break-after: avoid;
   }
 
   .cv-page .cv-print-name {
-    font-size: 24pt;
+    font-size: 17pt;
     line-height: 1.05;
   }
 
   .cv-page .cv-print-line {
-    margin-top: 1.2mm;
-    font-size: 9.5pt;
+    margin-top: 0.9mm;
+    font-size: 9pt;
     color: #333 !important;
   }
 
   .cv-page .cv-print-meta {
-    margin-top: 3mm;
-    font-size: 7.5pt;
+    margin-top: 1.6mm;
+    font-size: 7pt;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: #666 !important;
   }
 
   .cv-page .cv-sections > * {
-    margin-top: 7mm !important;
+    margin-top: 4.2mm !important;
     margin-bottom: 0 !important;
   }
 
@@ -86,30 +86,30 @@
 
   .cv-page .cv-section-rule {
     border-bottom: 0.75pt solid #111 !important;
-    padding-bottom: 1.5mm !important;
+    padding-bottom: 1mm !important;
     break-after: avoid;
   }
 
   .cv-page .cv-section-title {
-    font-size: 9pt;
-    letter-spacing: 0.18em;
+    font-size: 8.5pt;
+    letter-spacing: 0.16em;
   }
 
   .cv-page .cv-section-meta {
-    font-size: 8pt;
+    font-size: 7.5pt;
     color: #666 !important;
   }
 
   .cv-page .cv-section > div + div {
-    margin-top: 3mm !important;
+    margin-top: 1.8mm !important;
   }
 
   .cv-page .cv-entry {
     display: grid;
-    grid-template-columns: 30mm minmax(0, 1fr);
-    column-gap: 6mm;
+    grid-template-columns: 24mm minmax(0, 1fr);
+    column-gap: 4mm;
     row-gap: 0;
-    padding: 3.5mm 0 !important;
+    padding: 1.8mm 0 !important;
     break-inside: avoid;
   }
 
@@ -122,20 +122,25 @@
   }
 
   .cv-page .cv-period {
-    font-size: 8.5pt;
-    line-height: 1.5;
+    font-size: 8pt;
+    line-height: 1.45;
     color: #555 !important;
   }
 
   .cv-page h3 {
-    font-size: 12pt;
-    line-height: 1.2;
+    font-size: 10.5pt;
+    line-height: 1.15;
     break-after: avoid;
   }
 
   .cv-page p,
   .cv-page li {
-    font-size: 9.5pt;
+    font-size: 9pt;
+  }
+
+  .cv-page h3 + p,
+  .cv-page p + p {
+    margin-top: 0.6mm;
   }
 
   .cv-page span {
@@ -148,5 +153,11 @@
     padding: 0.4mm 1.4mm !important;
     border: 0.5pt solid #999 !important;
     color: #444 !important;
+  }
+
+  .cv-page .cv-type-tag {
+    font-size: 7.5pt !important;
+    letter-spacing: 0.1em;
+    color: #666 !important;
   }
 }

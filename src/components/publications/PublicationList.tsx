@@ -49,7 +49,7 @@ export function PublicationList({
   className,
 }: PublicationListProps) {
   const [active, setActive] = useState<PublicationFilterId>("all");
-  const [view, setView] = useState<ViewId>("sky");
+  const [view, setView] = useState<ViewId>("list");
 
   const counts = publicationCounts(publications);
   const options = [
@@ -86,8 +86,8 @@ export function PublicationList({
         >
           {(
             [
-              { id: "sky", label: "Sky" },
               { id: "list", label: "List" },
+              { id: "sky", label: "Sky" },
             ] as const
           ).map((option) => (
             <button
@@ -142,6 +142,7 @@ export function PublicationList({
                   <PublicationCard
                     key={publication.id}
                     publication={publication}
+                    expandable
                   />
                 ))}
               </div>

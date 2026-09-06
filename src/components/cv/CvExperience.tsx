@@ -15,7 +15,7 @@ export function CvExperience({ items }: CvExperienceProps) {
 
           <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <p className="text-[15px] text-moon-200">{item.organization}</p>
-            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-moon-500">
+            <span className="cv-type-tag font-mono text-[11px] uppercase tracking-[0.14em] text-moon-500">
               {item.type}
             </span>
           </div>
