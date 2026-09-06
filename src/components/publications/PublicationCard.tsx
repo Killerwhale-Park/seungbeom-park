@@ -5,6 +5,7 @@ import { Plus, X } from "lucide-react";
 import type { Publication, PublicationStatus } from "@/lib/types";
 import { LinkRow } from "@/components/ui/LinkRow";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { ArcRocket } from "@/components/effects/ArcRocket";
 import { BurstFx } from "@/components/effects/BurstFx";
 import { CopyBibtexButton } from "@/components/publications/CopyBibtexButton";
 import { ReviewPipeline } from "@/components/publications/ReviewPipeline";
@@ -22,59 +23,13 @@ const STATUS_COLOR: Record<PublicationStatus, string> = {
 const WITHHELD_SUMMARY =
   "Details are withheld while this paper is under double-blind review. A full summary will appear here once the decision is out.";
 
-const FLIGHT_MS = 550;
-
 type Fx = {
   x: number;
   y: number;
+  startX: number;
+  startY: number;
   phase: "flight" | "burst";
 };
-
-function CardRocket({ fx, onArrive }: { fx: Fx; onArrive: () => void }) {
-  const [flying, setFlying] = useState(false);
-  const [launchY] = useState(() => window.innerHeight + 24);
-  const arrived = useRef(false);
-
-  useEffect(() => {
-    const raf = requestAnimationFrame(() =>
-      requestAnimationFrame(() => setFlying(true)),
-    );
-    const safety = window.setTimeout(() => {
-      if (!arrived.current) {
-        arrived.current = true;
-        onArrive();
-      }
-    }, FLIGHT_MS + 200);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.clearTimeout(safety);
-    };
-  }, [onArrive]);
-
-  return (
-    <span
-      aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 z-30 block"
-      style={{
-        transform: flying
-          ? `translate(${fx.x}px, ${fx.y}px)`
-          : `translate(${fx.x}px, ${launchY}px)`,
-        transition: `transform ${FLIGHT_MS}ms cubic-bezier(0.22, 0.9, 0.32, 1)`,
-      }}
-      onTransitionEnd={() => {
-        if (!arrived.current) {
-          arrived.current = true;
-          onArrive();
-        }
-      }}
-    >
-      <span
-        className="block size-[4px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-ember-200"
-        style={{ boxShadow: "0 0 10px var(--color-ember-200)" }}
-      />
-    </span>
-  );
-}
 
 type PublicationCardProps = {
   publication: Publication;
@@ -124,7 +79,14 @@ export function PublicationCard({
       setOpen(true);
       return;
     }
-    setFx({ x: bx, y: by, phase: "flight" });
+    const side = bx > window.innerWidth / 2 ? -1 : 1;
+    setFx({
+      x: bx,
+      y: by,
+      startX: bx + side * (140 + Math.random() * 240),
+      startY: window.innerHeight + 24,
+      phase: "flight",
+    });
   };
 
   const onArrive = () => {
@@ -261,7 +223,14 @@ export function PublicationCard({
       </button>
 
       {fx && fx.phase === "flight" ? (
-        <CardRocket fx={fx} onArrive={onArrive} />
+        <ArcRocket
+          targetX={fx.x}
+          targetY={fx.y}
+          startX={fx.startX}
+          startY={fx.startY}
+          fixed
+          onArrive={onArrive}
+        />
       ) : null}
       {fx && fx.phase === "burst" ? (
         <BurstFx x={fx.x} y={fx.y} color={statusColor} fixed />

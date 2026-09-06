@@ -110,16 +110,18 @@ const BACK = buildLayer({
   litDensity: 0,
 });
 
+const GATE_ZONE: [number, number] = [40, 330];
+
 const FRONT = buildLayer({
   seed: 0x7c2d91,
   baseline: WATER_Y,
   span: [46, 132],
-  rise: [50, 175],
+  rise: [50, 160],
   gap: [-10, 16],
   spireChance: 0.14,
   ledgeChance: 0.3,
   litDensity: 0.1,
-});
+}).filter((b) => b.x + b.w < GATE_ZONE[0] || b.x > GATE_ZONE[1]);
 
 const RIDGE =
   "M0 292 L110 258 L240 226 L340 196 L420 168 L510 210 L640 240 L780 256 L900 238 L1060 262 L1230 234 L1400 258 L1560 242 L1740 262 L1920 274 L1920 340 L0 340 Z";
@@ -146,7 +148,7 @@ const tower63Windows: LitWindow[] = (() => {
   return lit;
 })();
 
-const LOTTE = { cx: 1568, baseW: 68, tipW: 11, top: 14, baseline: WATER_Y };
+const LOTTE = { cx: 1568, baseW: 78, tipW: 12, top: 4, baseline: WATER_Y };
 
 const lotteWindows: LitWindow[] = (() => {
   const rng = mulberry32(0x10773e);
@@ -182,28 +184,29 @@ const lottePath = (() => {
   ].join(" ");
 })();
 
-const BRIDGE = { from: 280, to: 1040, deckY: 224 };
+const BRIDGE = { from: 360, to: 1080, deckY: 218 };
 
 const bridgeLights: number[] = (() => {
   const xs: number[] = [];
-  for (let x = BRIDGE.from + 20; x <= BRIDGE.to - 20; x += 40) xs.push(x);
+  for (let x = BRIDGE.from + 18; x <= BRIDGE.to - 18; x += 36) xs.push(x);
   return xs;
 })();
 
 const FOUNTAINS: { x: number; dir: 1 | -1 }[] = [
-  { x: 400, dir: 1 },
-  { x: 520, dir: -1 },
+  { x: 420, dir: 1 },
+  { x: 530, dir: -1 },
   { x: 640, dir: 1 },
-  { x: 760, dir: -1 },
-  { x: 880, dir: 1 },
+  { x: 750, dir: -1 },
+  { x: 860, dir: 1 },
+  { x: 970, dir: -1 },
 ];
 
 const FOUNTAIN_DROPS: [number, number][] = [
-  [7, 3],
-  [12, 8],
-  [16, 14],
-  [18, 21],
-  [19, 28],
+  [8, 2],
+  [14, 5],
+  [19, 8],
+  [23, 11],
+  [26, 14],
 ];
 
 const reflections: { x: number; h: number; tone: WindowTone; alpha: number }[] =
@@ -281,16 +284,65 @@ function Layer({
 function NamsanTower() {
   return (
     <g style={{ fill: "var(--skyline-tower)" }}>
-      <rect x={398} y={152} width={44} height={16} />
-      <rect x={408} y={144} width={24} height={8} />
-      <rect x={416} y={86} width={8} height={58} />
-      <rect x={403} y={64} width={34} height={20} rx={4} />
-      <rect x={406} y={86} width={28} height={3} />
-      <rect x={418.5} y={28} width={3} height={36} />
-      <rect x={417} y={24} width={6} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.75} />
-      <rect x={408} y={71} width={5} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.55} />
-      <rect x={417} y={71} width={5} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.45} />
-      <rect x={426} y={71} width={5} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.55} />
+      <rect x={402} y={158} width={36} height={12} />
+      <rect x={410} y={152} width={20} height={6} />
+      <rect x={417} y={100} width={6} height={52} />
+      <rect x={405} y={80} width={30} height={18} rx={4} />
+      <rect x={408} y={98} width={24} height={3} />
+      <rect x={419} y={48} width={2.5} height={32} />
+      <rect x={417.5} y={44} width={5} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.75} />
+      <rect x={410} y={86} width={4} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.55} />
+      <rect x={418} y={86} width={4} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.45} />
+      <rect x={426} y={86} width={4} height={4} style={{ fill: TONE_FILL.warm }} opacity={0.55} />
+    </g>
+  );
+}
+
+function PalaceGate() {
+  return (
+    <g>
+      <rect
+        x={130}
+        y={200}
+        width={140}
+        height={36}
+        style={{ fill: "var(--skyline-front)" }}
+      />
+      <path
+        d="M100 206 Q120 188 150 184 L250 184 Q280 188 300 206 Q252 196 200 196 Q148 196 100 206 Z"
+        style={{ fill: "var(--skyline-front)" }}
+      />
+      <rect
+        x={150}
+        y={162}
+        width={100}
+        height={24}
+        style={{ fill: "var(--skyline-front)" }}
+      />
+      <path
+        d="M128 166 Q146 150 172 146 L228 146 Q254 150 272 166 Q236 158 200 158 Q164 158 128 166 Z"
+        style={{ fill: "var(--skyline-front)" }}
+      />
+      {[155, 193, 231].map((x) => (
+        <rect
+          key={x}
+          x={x}
+          y={214}
+          width={14}
+          height={20}
+          rx={7}
+          style={{ fill: TONE_FILL.warm }}
+          opacity={0.4}
+        />
+      ))}
+      <rect
+        x={168}
+        y={168}
+        width={64}
+        height={6}
+        style={{ fill: TONE_FILL.warm }}
+        opacity={0.25}
+      />
     </g>
   );
 }
@@ -322,9 +374,9 @@ function LotteTower() {
   return (
     <g>
       <path d={lottePath} style={{ fill: "var(--skyline-front)" }} />
-      <rect x={LOTTE.cx - 7} y={8} width={3} height={20} style={{ fill: "var(--skyline-front)" }} />
-      <rect x={LOTTE.cx + 4} y={8} width={3} height={20} style={{ fill: "var(--skyline-front)" }} />
-      <rect x={LOTTE.cx - 1.5} y={30} width={3} height={3} style={{ fill: TONE_FILL.warm }} opacity={0.6} />
+      <rect x={LOTTE.cx - 8} y={0} width={3} height={16} style={{ fill: "var(--skyline-front)" }} />
+      <rect x={LOTTE.cx + 5} y={0} width={3} height={16} style={{ fill: "var(--skyline-front)" }} />
+      <rect x={LOTTE.cx - 1.5} y={18} width={3} height={3} style={{ fill: TONE_FILL.warm }} opacity={0.6} />
       {lotteWindows.map((w, i) => (
         <rect
           key={i}
@@ -377,16 +429,16 @@ function HanRiver() {
         x={BRIDGE.from}
         y={BRIDGE.deckY}
         width={BRIDGE.to - BRIDGE.from}
-        height={5}
+        height={6}
         style={{ fill: "var(--skyline-front)" }}
       />
-      {[320, 440, 560, 680, 800, 920, 1010].map((x) => (
+      {[400, 500, 600, 700, 800, 900, 1000].map((x) => (
         <rect
           key={x}
           x={x}
-          y={BRIDGE.deckY + 5}
-          width={7}
-          height={26}
+          y={BRIDGE.deckY + 6}
+          width={8}
+          height={24}
           style={{ fill: "var(--skyline-front)" }}
         />
       ))}
@@ -394,10 +446,10 @@ function HanRiver() {
         <circle
           key={x}
           cx={x}
-          cy={BRIDGE.deckY - 2}
-          r={1.6}
+          cy={BRIDGE.deckY - 2.5}
+          r={1.9}
           style={{ fill: TONE_FILL.warm }}
-          opacity={0.6}
+          opacity={0.7}
         />
       ))}
       {FOUNTAINS.map((fountain) =>
@@ -405,10 +457,10 @@ function HanRiver() {
           <circle
             key={`${fountain.x}-${i}`}
             cx={fountain.x + dx * fountain.dir}
-            cy={BRIDGE.deckY + 3 + dy}
-            r={1}
+            cy={BRIDGE.deckY + 4 + dy}
+            r={1.3}
             style={{ fill: TONE_FILL.cool }}
-            opacity={0.4 - i * 0.05}
+            opacity={0.5 - i * 0.06}
           />
         )),
       )}
@@ -521,6 +573,7 @@ export function Skyline({
         className={`col-start-1 row-start-1 w-full transition-transform duration-700 ease-out will-change-transform motion-reduce:transition-none ${sizes.front}`}
       >
         <Layer buildings={FRONT} fill="var(--skyline-front)" baseline={WATER_Y} />
+        <PalaceGate />
         <LotteTower />
         <HanRiver />
       </svg>

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Publication, PublicationStatus } from "@/lib/types";
 import { hashSeed, mulberry32, randomRange } from "@/lib/random";
 import { Skyline } from "@/components/effects/Skyline";
+import { ArcRocket } from "@/components/effects/ArcRocket";
 import { BurstFx } from "@/components/effects/BurstFx";
 import { PublicationCard } from "@/components/publications/PublicationCard";
 import { isFirstAuthor } from "@/lib/publications";
@@ -24,6 +25,7 @@ type SkyNode = {
 type Shot = {
   x: number;
   y: number;
+  launchX: number;
   launchY: number;
   targetId: string | null;
   color: string;
@@ -63,7 +65,6 @@ const starField = SKY_STARS.map(
 ).join(", ");
 
 const HIT_RADIUS = 56;
-const FLIGHT_MS = 620;
 const BURST_MS = 750;
 
 function shortTitle(title: string) {
@@ -174,51 +175,6 @@ function NodeGlyph({
   );
 }
 
-function Rocket({ shot, onArrive }: { shot: Shot; onArrive: () => void }) {
-  const [flying, setFlying] = useState(false);
-  const arrived = useRef(false);
-
-  useEffect(() => {
-    const raf = requestAnimationFrame(() =>
-      requestAnimationFrame(() => setFlying(true)),
-    );
-    const safety = window.setTimeout(() => {
-      if (!arrived.current) {
-        arrived.current = true;
-        onArrive();
-      }
-    }, FLIGHT_MS + 200);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.clearTimeout(safety);
-    };
-  }, [onArrive]);
-
-  return (
-    <span
-      aria-hidden="true"
-      className="pointer-events-none absolute left-0 top-0 z-30 block"
-      style={{
-        transform: flying
-          ? `translate(${shot.x}px, ${shot.y}px)`
-          : `translate(${shot.x}px, ${shot.launchY}px)`,
-        transition: `transform ${FLIGHT_MS}ms cubic-bezier(0.22, 0.9, 0.32, 1)`,
-      }}
-      onTransitionEnd={() => {
-        if (!arrived.current) {
-          arrived.current = true;
-          onArrive();
-        }
-      }}
-    >
-      <span
-        className="block size-[4px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-ember-200"
-        style={{ boxShadow: "0 0 10px var(--color-ember-200)" }}
-      />
-    </span>
-  );
-}
-
 export function PublicationSky({
   publications,
   activeIds,
@@ -269,10 +225,15 @@ export function PublicationSky({
       return;
     }
 
+    const side = targetX > rect.width / 2 ? -1 : 1;
     setShot({
       x: targetX,
       y: targetY,
-      launchY: rect.height - 84,
+      launchX: Math.min(
+        Math.max(targetX + side * (110 + Math.random() * 180), 16),
+        rect.width - 16,
+      ),
+      launchY: rect.height - 60,
       targetId,
       color,
       phase: "flight",
@@ -373,7 +334,14 @@ export function PublicationSky({
         })}
 
         {shot && shot.phase === "flight" ? (
-          <Rocket shot={shot} onArrive={onArrive} />
+          <ArcRocket
+            targetX={shot.x}
+            targetY={shot.y}
+            startX={shot.launchX}
+            startY={shot.launchY}
+            durationMs={620}
+            onArrive={onArrive}
+          />
         ) : null}
         {shot && shot.phase === "burst" ? (
           <BurstFx x={shot.x} y={shot.y} color={shot.color} />
