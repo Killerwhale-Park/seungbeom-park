@@ -297,76 +297,70 @@ function Layer({
 function PalaceGate() {
   return (
     <g style={{ fill: "var(--skyline-front)" }}>
-      <polygon points="146,240 334,240 331,193 149,193" />
-      <rect x={188} y={139} width={104} height={18} />
-      <path d="M124 190 Q160 170 194 161 L286 161 Q320 170 356 190 L356 193 L124 193 Z" />
-      <rect x={190} y={156} width={100} height={6} />
-      <rect x={186} y={151} width={7} height={11} />
-      <rect x={287} y={151} width={7} height={11} />
-      <path d="M156 136 Q186 121 212 115 L268 115 Q294 121 324 136 L324 139 L156 139 Z" />
-      <rect x={208} y={110} width={64} height={6} />
-      <rect x={204} y={105} width={7} height={11} />
-      <rect x={269} y={105} width={7} height={11} />
-      <rect
-        x={228}
-        y={210}
-        width={24}
-        height={28}
-        rx={12}
+      <path d="M134 238 L138 196 L342 196 L346 238 Z" />
+      {[140, 158, 306, 324].map((x) => (
+        <rect key={x} x={x} y={188} width={14} height={9} />
+      ))}
+      <path
+        d="M218 238 L218 213 Q218 201 240 201 Q262 201 262 213 L262 238 Z"
         style={{ fill: "var(--skyline-arch)" }}
       />
-      {[180, 284].map((x) => (
+      <rect x={168} y={172} width={144} height={28} />
+      <path d="M144 183 Q148 176 156 173 Q240 182 324 173 Q332 176 336 183 L331 187 Q240 194 149 187 Z" />
+      <path d="M146 182 Q152 175 160 172 Q240 163 320 172 Q328 175 334 182 Q240 174 146 182 Z" />
+      <rect x={186} y={144} width={108} height={26} />
+      {[200, 224, 248, 272].map((x) => (
         <rect
           key={x}
           x={x}
-          y={216}
-          width={16}
-          height={22}
-          rx={8}
+          y={150}
+          width={9}
+          height={7}
           style={{ fill: "var(--skyline-arch)" }}
         />
       ))}
-      {[210, 236, 262].map((x) => (
-        <rect
-          key={x}
-          x={x}
-          y={144}
-          width={8}
-          height={6}
-          style={{ fill: "var(--skyline-arch)" }}
-        />
-      ))}
+      <path d="M166 152 Q172 146 180 143 C194 132 204 126 214 124 L266 124 C276 126 286 132 300 143 Q308 146 314 152 L308 157 Q240 167 172 157 Z" />
+      <rect x={208} y={118} width={64} height={7} />
+      <path d="M202 112 Q207 110 210 118 L210 125 L202 125 Z" />
+      <path d="M278 112 Q273 110 270 118 L270 125 L278 125 Z" />
     </g>
   );
 }
 
 function NamsanTower() {
+  const { cx } = NAMSAN;
   return (
     <g style={{ fill: "var(--skyline-front)" }}>
       <path
-        d={`M${NAMSAN.hillLeft} ${WATER_Y} Q${NAMSAN.cx - 50} ${NAMSAN.peakY + 4} ${NAMSAN.cx} ${NAMSAN.peakY} Q${NAMSAN.cx + 60} ${NAMSAN.peakY + 6} ${NAMSAN.hillRight} ${WATER_Y} Z`}
+        d={`M${NAMSAN.hillLeft} ${WATER_Y} Q${cx - 50} ${NAMSAN.peakY + 4} ${cx} ${NAMSAN.peakY} Q${cx + 60} ${NAMSAN.peakY + 6} ${NAMSAN.hillRight} ${WATER_Y} Z`}
       />
-      <polygon
-        points={`${NAMSAN.cx - 7},${NAMSAN.peakY} ${NAMSAN.cx + 7},${NAMSAN.peakY} ${NAMSAN.cx + 4},60 ${NAMSAN.cx - 4},60`}
+      <path
+        d={`M${cx - 9} ${NAMSAN.peakY + 2} C${cx - 6} 118 ${cx - 4.5} 88 ${cx - 4} 66 L${cx + 4} 66 C${cx + 4.5} 88 ${cx + 6} 118 ${cx + 9} ${NAMSAN.peakY + 2} Z`}
       />
-      <rect x={NAMSAN.cx - 22} y={40} width={44} height={18} rx={6} />
-      <rect x={NAMSAN.cx - 18} y={58} width={36} height={3.5} />
-      <rect x={NAMSAN.cx - 15} y={64} width={30} height={3} />
-      <rect x={NAMSAN.cx - 1.5} y={8} width={3} height={32} />
-      <rect x={NAMSAN.cx - 5} y={16} width={10} height={2.5} />
+      <path
+        d={`M${cx - 24} 40 Q${cx} 35 ${cx + 24} 40 L${cx + 21} 50 Q${cx} 54 ${cx - 21} 50 Z`}
+      />
+      <path
+        d={`M${cx - 19} 53 L${cx + 19} 53 L${cx + 7} 67 L${cx - 7} 67 Z`}
+      />
+      <path
+        d={`M${cx - 2.5} 12 L${cx + 2.5} 12 L${cx + 1.5} 40 L${cx - 1.5} 40 Z`}
+      />
+      <rect x={cx - 6} y={18} width={12} height={2} />
+      <rect x={cx - 4.5} y={26} width={9} height={2} />
       <rect
-        x={NAMSAN.cx - 3}
-        y={4}
-        width={6}
+        x={cx - 2.5}
+        y={8}
+        width={5}
         height={4}
         style={{ fill: TONE_FILL.warm }}
         opacity={0.8}
       />
       <rect
-        x={NAMSAN.cx - 18}
-        y={45}
-        width={36}
-        height={5}
+        x={cx - 17}
+        y={43}
+        width={34}
+        height={4}
         style={{ fill: TONE_FILL.warm }}
         opacity={0.5}
       />
@@ -400,23 +394,17 @@ function LotteTower() {
   return (
     <g>
       <path d={lottePath} style={{ fill: "var(--skyline-front)" }} />
-      <rect
-        x={LOTTE.cx - 9}
-        y={2}
-        width={4}
-        height={22}
+      <path
+        d={`M${LOTTE.cx - 10} 26 C${LOTTE.cx - 9} 12 ${LOTTE.cx - 7} 5 ${LOTTE.cx - 5} 2 L${LOTTE.cx - 3} 2 C${LOTTE.cx - 5} 10 ${LOTTE.cx - 6} 18 ${LOTTE.cx - 6} 26 Z`}
         style={{ fill: "var(--skyline-front)" }}
       />
-      <rect
-        x={LOTTE.cx + 5}
-        y={2}
-        width={4}
-        height={22}
+      <path
+        d={`M${LOTTE.cx + 10} 26 C${LOTTE.cx + 9} 12 ${LOTTE.cx + 7} 5 ${LOTTE.cx + 5} 2 L${LOTTE.cx + 3} 2 C${LOTTE.cx + 5} 10 ${LOTTE.cx + 6} 18 ${LOTTE.cx + 6} 26 Z`}
         style={{ fill: "var(--skyline-front)" }}
       />
       <rect
         x={LOTTE.cx - 1.5}
-        y={16}
+        y={18}
         width={3}
         height={3}
         style={{ fill: TONE_FILL.warm }}
