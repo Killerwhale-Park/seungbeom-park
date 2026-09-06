@@ -58,8 +58,8 @@ geo.gate = (() => {
   const x = 60;
   const baseT = 275;
   const shapes = [];
-  shapes.push({ k: "body", d: `M${x} ${G0} L${x + 3} ${baseT} L${x + 187} ${baseT} L${x + 190} ${G0} Z` });
-  shapes.push({ k: "body", d: `M${x + 1} ${baseT} L${x + 189} ${baseT} L${x + 189} ${baseT - 4} L${x + 1} ${baseT - 4} Z` });
+  shapes.push({ k: "stone", d: `M${x} ${G0} L${x + 3} ${baseT} L${x + 187} ${baseT} L${x + 190} ${G0} Z` });
+  shapes.push({ k: "stone", d: `M${x + 1} ${baseT} L${x + 189} ${baseT} L${x + 189} ${baseT - 4} L${x + 1} ${baseT - 4} Z` });
   shapes.push({ k: "wall", d: `M${x + 24} ${baseT - 4} L${x + 166} ${baseT - 4} L${x + 166} ${255} L${x + 24} ${255} Z` });
   shapes.push({ k: "roof", d: `M${x + 4} ${252} Q${x + 30} ${247} ${x + 91} ${246} L${x + 99} ${246} Q${x + 160} ${247} ${x + 186} ${252} L${x + 166} ${238} L${x + 164} ${238} L${x + 164} ${252} L${x + 26} ${252} L${x + 26} ${238} L${x + 24} ${238} Z` });
   shapes.push({ k: "roof", d: `M${x + 4} ${252} Q${x + 95} ${258} ${x + 186} ${252} Q${x + 95} ${262} ${x + 4} ${252} Z` });
@@ -444,7 +444,7 @@ const STYLES = {
     waterline: "#aab3f2",
     bank: "#04060c",
     fills: {
-      body: "#161b3a", wall: "#1a2044", roof: "#1c2246", roofband: "#161b3a",
+      body: "#161b3a", stone: "#161b3a", wall: "#1a2044", roof: "#1c2246", roofband: "#161b3a",
       gold: "#181530", midtown: "#0d1124", bridge: "#1b2142",
       arch: "rgba(255, 200, 120, 0.55)", sign: "rgba(255, 214, 140, 0.6)",
       winrow: "rgba(255, 217, 138, 0.55)", podwin: "rgba(255, 231, 178, 0.85)",
@@ -481,21 +481,21 @@ const STYLES = {
     skyGrad: `<defs><linearGradient id="dsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c2d7ee"/><stop offset="0.5" stop-color="#e9ece4"/><stop offset="0.64" stop-color="#f6d3a8"/><stop offset="1" stop-color="#dfe5ea"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#dsky)"/>`,
     ridgeFar: "#c6cfe0",
     ridgeNear: "#b2bdd1",
-    water: "#b7c7d6",
+    water: "#aec7db",
     waterline: "#ffffff",
-    bank: "#3f4961",
+    bank: "#47543f",
     fills: {
-      body: "#4f5a76", wall: "#57627e", roof: "#414c66", roofband: "#57627e",
+      body: "#4f5a76", stone: "#aba89c", wall: "#516b5f", roof: "#414c66", roofband: "#516b5f",
       gold: "#c9a05e", midtown: "#94a0b6", bridge: "#46516c",
       arch: "#2e3850", sign: "#39435c", winrow: "#39435c", podwin: "#e9edf4",
       beacon: "#c0392b", mast: "#4f5a76", hill: "#5d6a86", ddp: "#8792a8",
-      sebit: "#7d9a97", island: "#6b7890", islandTree: "#59667e", jamsil: "#485571",
-      cruiseHull: "#4a5570", cruiseDeck: "#dfe3ec",
+      sebit: "#7d9a97", island: "#7e947e", islandTree: "#5a7260", jamsil: "#485571",
+      cruiseHull: "#3f4c66", cruiseDeck: "#dfe3ec",
     },
     haze: {
-      body: "#7c88a2", wall: "#7c88a2", roof: "#7c88a2", roofband: "#7c88a2",
-      hill: "#a9b4c8", mast: "#7c88a2",
-      winrow: "#e9edf4", podwin: "#eef1f6", beacon: "#c0392b",
+      body: "#c3ccd9", wall: "#c3ccd9", roof: "#c3ccd9", roofband: "#c3ccd9",
+      hill: "#9fb4a3", mast: "#c3ccd9",
+      winrow: "#5f6d84", podwin: "#5b6a82", beacon: "#c0392b",
     },
     ddpSeam: "#7d889e",
     ddpDots: false,
