@@ -284,19 +284,29 @@ geo.midtown = (() => {
   const buildings = [];
   for (const [zx, zEnd, hMin, hMax] of slots) {
     let bx = zx;
-    while (bx < zEnd - 24) {
-      const bw = 26 + rng() * 46;
+    while (bx < zEnd - 14) {
+      const bw = 15 + rng() * 26;
       const bh = hMin + rng() * (hMax - hMin);
       const base = shore(bx + bw / 2) - 1;
+      const w = Math.min(bw, zEnd - bx);
       const wins = [];
-      for (let wy = base - bh + 7; wy < base - 5; wy += 9) {
-        for (let wx = bx + 5; wx < bx + Math.min(bw, zEnd - bx) - 5; wx += 9) {
+      for (let wy = base - bh + 6; wy < base - 5; wy += 9) {
+        for (let wx = bx + 4; wx < bx + w - 4; wx += 7) {
           if (rng() > 0.3) continue;
           wins.push([wx, wy]);
         }
       }
-      buildings.push({ x: bx, w: Math.min(bw, zEnd - bx), h: bh, base, wins });
-      bx += bw - 3 + rng() * 7;
+      const building = { x: bx, w, h: bh, base, wins, tone: Math.floor(rng() * 3) };
+      if (rng() < 0.24) building.cap = true;
+      if (rng() < 0.26) {
+        building.stub = {
+          x: bx + 2 + rng() * Math.max(1, w - 12),
+          w: 5 + rng() * 7,
+          h: 4 + rng() * 7,
+        };
+      }
+      buildings.push(building);
+      bx += bw - 2 + rng() * 5;
     }
   }
   return buildings;
@@ -339,9 +349,18 @@ function render(style) {
   parts.push(`<g transform="${TF.namsan}">${geo.namsan.map((sh) => emit(s, sh, s.haze)).join("")}</g>`);
 
   for (const b of geo.midtown) {
-    parts.push(`<path d="M${b.x} ${b.base + 8} L${b.x} ${b.base - b.h} L${b.x + b.w} ${b.base - b.h} L${b.x + b.w} ${b.base + 8} Z" fill="${s.fills.midtown}"/>`);
+    const fill = s.midtownTones[b.tone];
+    parts.push(`<path d="M${b.x} ${b.base + 8} L${b.x} ${b.base - b.h} L${b.x + b.w} ${b.base - b.h} L${b.x + b.w} ${b.base + 8} Z" fill="${fill}"/>`);
+    if (b.cap) {
+      parts.push(`<rect x="${b.x - 2}" y="${(b.base - b.h - 3).toFixed(1)}" width="${b.w + 4}" height="3" fill="${fill}"/>`);
+    }
+    if (b.stub) {
+      parts.push(`<rect x="${b.stub.x.toFixed(1)}" y="${(b.base - b.h - b.stub.h).toFixed(1)}" width="${b.stub.w.toFixed(1)}" height="${b.stub.h.toFixed(1)}" fill="${fill}"/>`);
+    }
     if (s.midtownWins) {
       parts.push(b.wins.map(([wx, wy]) => `<rect x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" width="2.2" height="3" fill="${s.lightWarm}" opacity="${(0.1 + ((wx * 7 + wy) % 5) * 0.05).toFixed(2)}"/>`).join(""));
+    } else {
+      parts.push(b.wins.map(([wx, wy]) => `<rect x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" width="2.2" height="3" fill="${s.winDark}" opacity="0.35"/>`).join(""));
     }
   }
 
@@ -472,6 +491,8 @@ const STYLES = {
     reflectOpacity: 0.17,
     eaveGlow: true,
     midtownWins: true,
+    midtownTones: ["#0d1124", "#0b0f20", "#0f1428"],
+    winDark: "#1a2140",
     cruiseWin: "#ffe0a0",
     cruiseWinOpacity: 0.85,
     lampPole: "#141a30",
@@ -511,6 +532,8 @@ const STYLES = {
     reflectOpacity: 0.3,
     eaveGlow: false,
     midtownWins: false,
+    midtownTones: ["#96a1b7", "#8b96ad", "#a0abbf"],
+    winDark: "#67718c",
     cruiseWin: "#4a5570",
     cruiseWinOpacity: 0.75,
     lampPole: "#2f374d",
