@@ -76,7 +76,7 @@ export function Hero({
         className="hero-scrim pointer-events-none absolute inset-0 z-20"
       />
 
-      <Skyline className="absolute inset-x-0 -bottom-px z-30" />
+      <Skyline className="absolute inset-x-0 -bottom-2 z-30" />
 
       <div className="pointer-events-none relative z-40 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pt-28 pb-44 sm:pb-56 lg:pb-64">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ember-400 sm:text-[12px]">
