@@ -266,7 +266,7 @@ export function PublicationSky({
         <Skyline
           size="mini"
           parallax={false}
-          className="absolute inset-x-0 bottom-0 opacity-80"
+          className="absolute inset-x-0 -bottom-px opacity-80"
         />
 
         <div

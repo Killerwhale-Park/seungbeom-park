@@ -49,6 +49,7 @@
   --skyline-water: #030509;
   --skyline-window: #ffd98a;
   --skyline-window-cool: #aab3f2;
+  --skyline-arch: rgba(255, 217, 138, 0.32);
 
   --panel-a: #04050c;
   --panel-b: #080b18;
@@ -105,6 +106,7 @@ html[data-theme="light"] {
   --skyline-water: #b4c4d4;
   --skyline-window: #f6f8fb;
   --skyline-window-cool: #dfe7f2;
+  --skyline-arch: #39435c;
 
   --panel-a: #c9dcf1;
   --panel-b: #e2e8e8;

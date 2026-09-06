@@ -144,10 +144,12 @@ const b63Windows: LitWindow[] = (() => {
   const rng = mulberry32(0x63b1d6);
   const lit: LitWindow[] = [];
   for (let y = B63.top + 12; y < WATER_Y - 10; y += 9) {
-    for (let x = B63.left + 10; x < B63.right - 8; x += 11) {
+    const progress = (y - B63.top) / (WATER_Y - B63.top);
+    const inset = 7 + 20 * Math.pow(1 - progress, 1.5);
+    for (let x = B63.left + inset; x < B63.right - inset - 3; x += 11) {
       if (rng() > 0.72) continue;
       lit.push({
-        x,
+        x: Math.round(x),
         y,
         tone: "warm",
         alpha: Math.round(randomRange(rng, 0.26, 0.5) * 100) / 100,
@@ -294,49 +296,46 @@ function Layer({
 
 function PalaceGate() {
   return (
-    <g>
+    <g style={{ fill: "var(--skyline-front)" }}>
+      <polygon points="146,240 334,240 331,193 149,193" />
+      <rect x={188} y={139} width={104} height={18} />
+      <path d="M124 190 Q160 170 194 161 L286 161 Q320 170 356 190 L356 193 L124 193 Z" />
+      <rect x={190} y={156} width={100} height={6} />
+      <rect x={186} y={151} width={7} height={11} />
+      <rect x={287} y={151} width={7} height={11} />
+      <path d="M156 136 Q186 121 212 115 L268 115 Q294 121 324 136 L324 139 L156 139 Z" />
+      <rect x={208} y={110} width={64} height={6} />
+      <rect x={204} y={105} width={7} height={11} />
+      <rect x={269} y={105} width={7} height={11} />
       <rect
-        x={150}
-        y={190}
-        width={180}
-        height={50}
-        style={{ fill: "var(--skyline-front)" }}
+        x={228}
+        y={210}
+        width={24}
+        height={28}
+        rx={12}
+        style={{ fill: "var(--skyline-arch)" }}
       />
-      <path
-        d="M116 190 Q150 158 200 152 L280 152 Q330 158 364 190 Q300 172 240 172 Q180 172 116 190 Z"
-        style={{ fill: "var(--skyline-front)" }}
-      />
-      <rect
-        x={186}
-        y={128}
-        width={108}
-        height={26}
-        style={{ fill: "var(--skyline-front)" }}
-      />
-      <path
-        d="M158 134 Q186 108 218 104 L262 104 Q294 108 322 134 Q280 120 240 120 Q200 120 158 134 Z"
-        style={{ fill: "var(--skyline-front)" }}
-      />
-      {[187, 229, 271].map((x) => (
+      {[180, 284].map((x) => (
         <rect
           key={x}
           x={x}
-          y={204}
-          width={22}
-          height={34}
-          rx={11}
-          style={{ fill: TONE_FILL.warm }}
-          opacity={0.38}
+          y={216}
+          width={16}
+          height={22}
+          rx={8}
+          style={{ fill: "var(--skyline-arch)" }}
         />
       ))}
-      <rect
-        x={196}
-        y={134}
-        width={88}
-        height={7}
-        style={{ fill: TONE_FILL.warm }}
-        opacity={0.25}
-      />
+      {[210, 236, 262].map((x) => (
+        <rect
+          key={x}
+          x={x}
+          y={144}
+          width={8}
+          height={6}
+          style={{ fill: "var(--skyline-arch)" }}
+        />
+      ))}
     </g>
   );
 }
@@ -371,23 +370,8 @@ function NamsanTower() {
         style={{ fill: TONE_FILL.warm }}
         opacity={0.5}
       />
-      {[-40, -14, 12, 32].map((dx) => (
-        <rect
-          key={dx}
-          x={NAMSAN.cx + dx}
-          y={randToY(dx)}
-          width={3}
-          height={3}
-          style={{ fill: TONE_FILL.warm }}
-          opacity={0.35}
-        />
-      ))}
     </g>
   );
-}
-
-function randToY(dx: number): number {
-  return 196 + ((Math.abs(dx * 7) % 4) + 1) * 7;
 }
 
 function Building63() {
@@ -632,7 +616,7 @@ export function Skyline({
         ref={backRef}
         viewBox={`0 0 ${VIEW_W} ${BACK_H}`}
         preserveAspectRatio="none"
-        className={`col-start-1 row-start-1 w-full transition-transform duration-700 ease-out will-change-transform motion-reduce:transition-none ${sizes.back}`}
+        className={`col-start-1 row-start-1 -mb-2 block w-full transition-transform duration-700 ease-out will-change-transform motion-reduce:transition-none ${sizes.back}`}
       >
         <path d={RIDGE_FAR} style={{ fill: "var(--skyline-ridge)" }} opacity={0.4} />
         <path d={RIDGE_NEAR} style={{ fill: "var(--skyline-ridge)" }} opacity={0.65} />
@@ -644,7 +628,7 @@ export function Skyline({
         ref={frontRef}
         viewBox={`0 0 ${VIEW_W} ${FRONT_H}`}
         preserveAspectRatio="none"
-        className={`col-start-1 row-start-1 w-full transition-transform duration-700 ease-out will-change-transform motion-reduce:transition-none ${sizes.front}`}
+        className={`col-start-1 row-start-1 -mb-2 block w-full transition-transform duration-700 ease-out will-change-transform motion-reduce:transition-none ${sizes.front}`}
       >
         <Layer buildings={FRONT} fill="var(--skyline-front)" baseline={WATER_Y} />
         <PalaceGate />
