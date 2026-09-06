@@ -35,7 +35,7 @@ export function PageHeader({
       </p>
 
       <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-        <h1 className="font-display text-[2.75rem] leading-[1.05] text-moon-50 sm:text-[3.5rem]">
+        <h1 className="font-display text-[2.4rem] font-bold leading-[1.05] tracking-[-0.03em] text-moon-50 sm:text-[3rem]">
           {title}
         </h1>
         {meta ? <div className="shrink-0 sm:pb-2">{meta}</div> : null}

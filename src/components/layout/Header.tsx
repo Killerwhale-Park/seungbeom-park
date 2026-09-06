@@ -37,7 +37,7 @@ export function Header() {
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:h-16 sm:px-6">
         <Link
           href="/"
-          className="font-display text-base italic text-moon-50 transition-colors hover:text-ember-200 sm:text-lg"
+          className="font-display text-[15px] font-semibold whitespace-nowrap tracking-[-0.015em] text-moon-50 transition-colors hover:text-ember-200 sm:text-lg"
         >
           Seungbeom Park
         </Link>

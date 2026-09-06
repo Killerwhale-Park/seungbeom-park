@@ -32,7 +32,7 @@ type CvEntryTitleProps = {
 
 export function CvEntryTitle({ children }: CvEntryTitleProps) {
   return (
-    <h3 className="font-display text-[1.35rem] leading-tight text-moon-50">
+    <h3 className="font-display text-[1.25rem] font-semibold leading-tight tracking-[-0.015em] text-moon-50">
       {children}
     </h3>
   );

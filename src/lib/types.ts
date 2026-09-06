@@ -64,6 +64,7 @@ export type Publication = {
   type: PublicationType;
   status: PublicationStatus;
   abstract?: string;
+  bibtex?: string;
   awards?: string[];
   links?: {
     pdf?: string;

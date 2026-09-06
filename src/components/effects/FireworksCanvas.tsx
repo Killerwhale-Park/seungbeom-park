@@ -48,21 +48,27 @@ const TAU = Math.PI * 2;
 const FRAME = 1000 / 60;
 const MAX_SPARKS = 1200;
 const MAX_BURSTS = 4;
-const TRAIL_KEEP = 0.84;
 
 const FAMILIES: readonly (readonly string[])[] = [
   ["#ffd98a", "#f2b45c", "#ffe9bd", "#fff3d6"],
   ["#e8e6f0", "#f4f5fb", "#d8dcee"],
-  ["#aab3f2", "#8b93e0", "#c3c9f7"],
-  ["#e8a3b8", "#f0c0cc"],
+  ["#ff8d7d", "#ff6b5e", "#ffc4ba", "#ffdcd4"],
+  ["#8fe89f", "#6fd884", "#c4f5cc", "#e2ffe8"],
+  ["#7fb2ff", "#5d97f2", "#b6d2ff", "#dce9ff"],
+  ["#c09aff", "#a878f2", "#dcc8ff", "#efe4ff"],
+  ["#ff9ec2", "#f27fab", "#ffc9dd"],
+  ["#7de8dc", "#5dd6c8", "#c2f7f1"],
 ];
 
+const FAMILY_WEIGHTS = [0.24, 0.12, 0.13, 0.13, 0.13, 0.11, 0.08, 0.06];
+
 function familyFor(rng: Rng): readonly string[] {
-  const roll = rng();
-  if (roll < 0.6) return FAMILIES[0];
-  if (roll < 0.8) return FAMILIES[1];
-  if (roll < 0.92) return FAMILIES[2];
-  return FAMILIES[3];
+  let roll = rng();
+  for (let i = 0; i < FAMILIES.length; i += 1) {
+    roll -= FAMILY_WEIGHTS[i];
+    if (roll <= 0) return FAMILIES[i];
+  }
+  return FAMILIES[0];
 }
 
 function hexAlpha(hex: string, alpha: number): string {
@@ -252,24 +258,6 @@ export function FireworksCanvas({
         r.x += r.vx * dt;
         r.y += r.vy * dt;
 
-        if (sparks.length < MAX_SPARKS && rng() < Math.min(1, 0.85 * dt)) {
-          const life = randomRange(rng, 10, 24);
-          sparks.push({
-            x: r.x + randomRange(rng, -1, 1),
-            y: r.y + randomRange(rng, -1, 1),
-            vx: r.vx * -0.1 + randomRange(rng, -0.3, 0.3),
-            vy: r.vy * -0.05 + randomRange(rng, -0.2, 0.4),
-            life,
-            maxLife: life,
-            size: randomRange(rng, 0.6, 1.2),
-            color: "#ffd98a",
-            gravity: 0.012,
-            drag: 0.94,
-            twinkle: false,
-            halo: false,
-          });
-        }
-
         if (r.age >= r.fuse || r.y <= 4) {
           explode(r);
           rockets.splice(i, 1);
@@ -308,16 +296,29 @@ export function FireworksCanvas({
         ctx.fillRect(f.x - radius, f.y - radius, radius * 2, radius * 2);
       }
 
+      ctx.lineCap = "round";
       for (const p of sparks) {
         const t = p.life / p.maxLife;
         let alpha = t > 0.4 ? 1 : t / 0.4;
         if (p.twinkle && t < 0.34) alpha *= randomRange(rng, 0.25, 1);
         ctx.globalAlpha = alpha;
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, TAU);
-        ctx.fill();
+        const speed = Math.hypot(p.vx, p.vy);
+        if (speed > 0.6) {
+          const stretch = Math.min(3.2, 1.2 + speed * 0.5);
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = p.size;
+          ctx.beginPath();
+          ctx.moveTo(p.x - p.vx * stretch, p.y - p.vy * stretch);
+          ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, TAU);
+          ctx.fill();
+        }
         if (p.halo && alpha > 0.5) {
+          ctx.fillStyle = p.color;
           ctx.globalAlpha = alpha * 0.12;
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size * 3.2, 0, TAU);
@@ -362,17 +363,12 @@ export function FireworksCanvas({
 
       step(dt);
 
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = 1;
+      ctx.clearRect(0, 0, width, height);
       if (sparks.length === 0 && rockets.length === 0 && flashes.length === 0) {
-        ctx.globalCompositeOperation = "source-over";
-        ctx.globalAlpha = 1;
-        ctx.clearRect(0, 0, width, height);
         return;
       }
-
-      ctx.globalCompositeOperation = "destination-out";
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = `rgba(4, 5, 12, ${1 - Math.pow(TRAIL_KEEP, dt)})`;
-      ctx.fillRect(0, 0, width, height);
       render();
     }
 

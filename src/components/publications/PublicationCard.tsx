@@ -1,6 +1,7 @@
 import type { Publication } from "@/lib/types";
 import { LinkRow } from "@/components/ui/LinkRow";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { CopyBibtexButton } from "@/components/publications/CopyBibtexButton";
 
 export type PublicationCardVariant = "default" | "compact";
 
@@ -32,13 +33,13 @@ export function PublicationCard({
       </div>
 
       <h3
-        className={`mt-4 font-display leading-snug text-moon-50 ${compact ? "text-[1.0625rem]" : "text-[1.25rem] sm:text-[1.375rem]"}`}
+        className={`mt-4 font-display font-semibold leading-snug tracking-[-0.015em] text-moon-50 ${compact ? "text-[1.0625rem]" : "text-[1.2rem] sm:text-[1.3rem]"}`}
       >
         {publication.title}
       </h3>
 
       {publication.note ? (
-        <p className="mt-1.5 text-[13px] italic leading-relaxed text-moon-400">
+        <p className="mt-1.5 text-[13px] leading-relaxed text-moon-400">
           {publication.note}
         </p>
       ) : null}
@@ -76,7 +77,14 @@ export function PublicationCard({
         </p>
       ) : null}
 
-      <LinkRow links={publication.links} className="mt-5" />
+      {publication.links || publication.bibtex ? (
+        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <LinkRow links={publication.links} />
+          {publication.bibtex ? (
+            <CopyBibtexButton bibtex={publication.bibtex} />
+          ) : null}
+        </div>
+      ) : null}
     </article>
   );
 }

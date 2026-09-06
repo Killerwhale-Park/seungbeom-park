@@ -17,7 +17,7 @@ export function CvPrintHeader({
 }: CvPrintHeaderProps) {
   return (
     <header className="cv-print-head" aria-hidden="true">
-      <p className="cv-print-name font-display">{name}</p>
+      <p className="cv-print-name font-display font-bold tracking-[-0.02em]">{name}</p>
       <p className="cv-print-line">{title}</p>
       <p className="cv-print-line">{affiliation}</p>
       <p className="cv-print-line">

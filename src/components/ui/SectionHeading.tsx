@@ -14,7 +14,7 @@ export function SectionHeading({ eyebrow, title, meta }: SectionHeadingProps) {
       </p>
 
       <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8">
-        <h2 className="font-display text-[2rem] leading-none text-moon-50 sm:text-[2.5rem]">
+        <h2 className="font-display text-[1.75rem] font-bold leading-none tracking-[-0.025em] text-moon-50 sm:text-[2.15rem]">
           {title}
         </h2>
         {meta ? (

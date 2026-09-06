@@ -25,8 +25,8 @@
 
   --color-mint-300: #8fd9b0;
 
-  --font-display: var(--font-instrument-serif), Georgia, serif;
-  --font-sans: var(--font-instrument-sans), system-ui, sans-serif;
+  --font-display: var(--font-pretendard), "Pretendard Variable", system-ui, sans-serif;
+  --font-sans: var(--font-pretendard), "Pretendard Variable", system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
@@ -64,6 +64,53 @@
   .pulse-dot {
     animation: pulse-dot 2s ease-in-out infinite;
   }
+
+  .sky-burst-flash {
+    animation: sky-burst-flash 700ms ease-out forwards;
+  }
+
+  .sky-burst-ray {
+    animation: sky-burst-ray 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .sky-float {
+    animation: sky-float 5s ease-in-out infinite;
+  }
+}
+
+@keyframes sky-burst-flash {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+@keyframes sky-burst-ray {
+  0% {
+    opacity: 1;
+    transform: scale(0.1);
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes sky-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 @keyframes pulse-dot {
@@ -77,8 +124,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pulse-dot {
+  .pulse-dot,
+  .sky-float {
     animation: none;
+  }
+
+  .sky-burst-flash,
+  .sky-burst-ray {
+    animation: none;
+    opacity: 0;
   }
 
   .reveal-hidden {

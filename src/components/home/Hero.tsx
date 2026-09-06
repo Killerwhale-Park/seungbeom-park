@@ -42,7 +42,7 @@ const starField = STARS.map(
 ).join(", ");
 
 const actionClass =
-  "inline-flex items-center gap-2 rounded-[2px] border border-white/15 bg-night-950/40 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-moon-200 backdrop-blur-[2px] transition duration-200 hover:border-ember-500/50 hover:text-ember-200 hover:shadow-[0_0_40px_-12px_rgba(217,143,53,0.7)]";
+  "pointer-events-auto inline-flex items-center gap-2 rounded-[2px] border border-white/15 bg-night-950/40 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-moon-200 backdrop-blur-[2px] transition duration-200 hover:border-ember-500/50 hover:text-ember-200 hover:shadow-[0_0_40px_-12px_rgba(217,143,53,0.7)]";
 
 export function Hero({
   eyebrow,
@@ -78,12 +78,12 @@ export function Hero({
 
       <Skyline className="absolute inset-x-0 bottom-0 z-30" />
 
-      <div className="relative z-40 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pt-28 pb-44 sm:pb-56 lg:pb-64">
+      <div className="pointer-events-none relative z-40 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pt-28 pb-44 sm:pb-56 lg:pb-64">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ember-400 sm:text-[12px]">
           {eyebrow} — {location}
         </p>
 
-        <h1 className="mt-6 font-display text-[clamp(3.25rem,11vw,7rem)] leading-[0.9] text-moon-50">
+        <h1 className="mt-6 font-display text-[clamp(2.9rem,9.5vw,6rem)] font-extrabold leading-[0.96] tracking-[-0.035em] text-moon-50">
           {name}
         </h1>
 
@@ -127,7 +127,7 @@ export function Hero({
 
           <Link
             href="/cv"
-            className="inline-flex items-center gap-2 px-1 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-moon-400 transition-colors duration-200 hover:text-ember-300"
+            className="pointer-events-auto inline-flex items-center gap-2 px-1 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-moon-400 transition-colors duration-200 hover:text-ember-300"
           >
             <FileText size={16} strokeWidth={1.5} aria-hidden="true" />
             View CV

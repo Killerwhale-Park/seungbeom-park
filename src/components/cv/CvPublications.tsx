@@ -43,12 +43,12 @@ export function CvPublications({ items }: CvPublicationsProps) {
             </span>
           }
         >
-          <h3 className="font-display text-[1.25rem] leading-snug text-moon-50">
+          <h3 className="font-display text-[1.2rem] font-semibold leading-snug tracking-[-0.015em] text-moon-50">
             {item.title}
           </h3>
 
           {item.note ? (
-            <p className="mt-1 text-[13px] italic text-moon-400">{item.note}</p>
+            <p className="mt-1 text-[13px] text-moon-400">{item.note}</p>
           ) : null}
 
           <AuthorLine authors={item.authors} />

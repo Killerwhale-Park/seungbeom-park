@@ -122,8 +122,8 @@ export function ProjectCard({ project, variant = "default" }: ProjectCardProps) 
         {status.label}
       </p>
       <h2
-        className={`mt-4 font-display leading-tight text-moon-50 ${
-          featured ? "text-[1.75rem] sm:text-[2rem]" : "text-[1.5rem]"
+        className={`mt-4 font-display font-semibold leading-tight tracking-[-0.02em] text-moon-50 ${
+          featured ? "text-[1.6rem] sm:text-[1.85rem]" : "text-[1.4rem]"
         }`}
       >
         {project.name}
