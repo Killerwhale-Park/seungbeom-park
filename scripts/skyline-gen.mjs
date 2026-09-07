@@ -358,7 +358,7 @@ function render(style) {
       parts.push(`<rect x="${b.stub.x.toFixed(1)}" y="${(b.base - b.h - b.stub.h).toFixed(1)}" width="${b.stub.w.toFixed(1)}" height="${b.stub.h.toFixed(1)}" fill="${fill}"/>`);
     }
     if (s.midtownWins) {
-      parts.push(b.wins.map(([wx, wy]) => `<rect x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" width="2.2" height="3" fill="${s.lightWarm}" opacity="${(0.1 + ((wx * 7 + wy) % 5) * 0.05).toFixed(2)}"/>`).join(""));
+      parts.push(b.wins.map(([wx, wy]) => `<rect x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" width="2.2" height="3" fill="${s.lightWarm}" opacity="${(0.26 + ((wx * 7 + wy) % 5) * 0.09).toFixed(2)}"/>`).join(""));
     } else {
       parts.push(b.wins.map(([wx, wy]) => `<rect x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" width="2.2" height="3" fill="${s.winDark}" opacity="0.35"/>`).join(""));
     }
@@ -376,7 +376,7 @@ function render(style) {
   for (const t of geo.island.trees) parts.push(`<path d="${t}" fill="${s.fills.islandTree}"/>`);
   parts.push(`<g transform="${TF.b63}">${geo.b63.map((sh) => emit(s, sh)).join("")}</g>`);
   if (s.midtownWins) {
-    parts.push(geo.island.shoreLights.map(([lx, ly]) => `<circle cx="${lx}" cy="${ly}" r="1" fill="${s.lightWarm}" opacity="0.5"/>`).join(""));
+    parts.push(geo.island.shoreLights.map(([lx, ly]) => `<circle cx="${lx}" cy="${ly}" r="1.1" fill="${s.lightWarm}" opacity="0.68"/>`).join(""));
   }
 
   for (const sh of geo.bridge) parts.push(emit(s, sh, undefined, style));
@@ -403,7 +403,7 @@ function render(style) {
   for (const b of geo.jamsil) {
     parts.push(`<path d="M${b.x} ${b.base} L${b.x} ${b.base - b.h} L${b.x + b.w} ${b.base - b.h} L${b.x + b.w} ${b.base} Z" fill="${s.fills.jamsil}"/>`);
     if (s.midtownWins) {
-      parts.push(b.wins.map(([wx, wy]) => `<rect x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" width="2.4" height="3.2" fill="${s.lightWarm}" opacity="${(0.12 + ((wx * 11 + wy) % 5) * 0.05).toFixed(2)}"/>`).join(""));
+      parts.push(b.wins.map(([wx, wy]) => `<rect x="${wx.toFixed(1)}" y="${wy.toFixed(1)}" width="2.4" height="3.2" fill="${s.lightWarm}" opacity="${(0.28 + ((wx * 11 + wy) % 5) * 0.09).toFixed(2)}"/>`).join(""));
     }
   }
   parts.push(`<g transform="${TF.lotte}">${geo.lotte.map((sh) => emit(s, sh)).join("")}</g>`);
@@ -438,7 +438,7 @@ function emit(s, sh, haze, style) {
   }
   if (sh.k === "ddpdots") {
     if (!s.ddpDots) return "";
-    return sh.dots.map(([dx, dy]) => `<circle cx="${dx.toFixed(1)}" cy="${dy.toFixed(1)}" r="0.9" fill="${s.lightCool}" opacity="${(0.2 + ((dx * 13) % 7) * 0.08).toFixed(2)}"/>`).join("");
+    return sh.dots.map(([dx, dy]) => `<circle cx="${dx.toFixed(1)}" cy="${dy.toFixed(1)}" r="0.9" fill="${s.lightCool}" opacity="${(0.32 + ((dx * 13) % 7) * 0.08).toFixed(2)}"/>`).join("");
   }
   if (sh.k === "ddpseam") {
     return `<path d="${sh.d}" fill="none" stroke="${s.ddpSeam}" stroke-width="1.2" opacity="0.8"/>`;
@@ -465,8 +465,8 @@ const STYLES = {
     fills: {
       body: "#161b3a", stone: "#161b3a", wall: "#1a2044", roof: "#1c2246", roofband: "#161b3a",
       gold: "#181530", midtown: "#0d1124", bridge: "#1b2142",
-      arch: "rgba(255, 200, 120, 0.55)", sign: "rgba(255, 214, 140, 0.6)",
-      winrow: "rgba(255, 217, 138, 0.55)", podwin: "rgba(255, 231, 178, 0.85)",
+      arch: "rgba(255, 200, 120, 0.68)", sign: "rgba(255, 214, 140, 0.72)",
+      winrow: "rgba(255, 217, 138, 0.65)", podwin: "rgba(255, 231, 178, 0.9)",
       beacon: "#ff6b5e", mast: "#2c3560", hill: "#0c1024", ddp: "#11152c",
       sebit: "#0e1226", island: "#0a0e1e", islandTree: "#0c1124", jamsil: "#0c1122",
       cruiseHull: "#12172e", cruiseDeck: "#181e3c",
@@ -484,7 +484,7 @@ const STYLES = {
     lightWarm: "#ffd98a",
     lightCool: "#cfd6ff",
     goldWin: "#ffca6a",
-    winOpacity: 0.6,
+    winOpacity: 0.78,
     lightOpacity: 0.9,
     jetColors: ["#7fb2ff", "#b48aff", "#7de8dc", "#ff9ec2", "#8fe89f"],
     curtainOpacity: 0.5,
