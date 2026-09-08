@@ -2,33 +2,40 @@ import type { Publication } from "@/lib/types";
 
 export const publications: Publication[] = [
   {
-    id: "workshop-2026",
-    title: "First-Author Workshop Paper",
-    anonymized: true,
-    note: "Title withheld during double-blind review",
+    id: "skillcombiner-realm-2026",
+    title: "SkillCombiner: Optimizing Agent Skills via Edit Combination Search",
     authors: [
       { name: "Seungbeom Park", isSelf: true },
-      { name: "Co-authors withheld" },
+      { name: "Jaewon Chu" },
+      { name: "Hyunwoo J. Kim" },
     ],
     venue: {
-      name: "International Workshop (venue withheld)",
+      name: "Second Workshop for Research on Agent Language Models",
+      abbreviation: "REALM @ EMNLP",
       year: 2026,
     },
     type: "workshop",
-    status: "under-review",
+    status: "accepted",
+    note: "Poster",
+    links: {
+      pdf: "coming-soon",
+      arxiv: "coming-soon",
+      code: "coming-soon",
+    },
   },
   {
-    id: "conference-2026",
+    id: "sp-2027",
     title: "Co-Authored Conference Paper",
     anonymized: true,
     note: "Title withheld during double-blind review",
     authors: [
-      { name: "Lead author withheld" },
+      { name: "Co-authors withheld" },
       { name: "Seungbeom Park", isSelf: true },
     ],
     venue: {
-      name: "International Conference (venue withheld)",
-      year: 2026,
+      name: "IEEE Symposium on Security and Privacy",
+      abbreviation: "S&P",
+      year: 2027,
     },
     type: "conference",
     status: "under-review",
