@@ -141,7 +141,7 @@ export function PublicationCard({
       </p>
 
       <p className="mt-2 font-mono text-[12px] leading-relaxed text-moon-500">
-        {compact ? `${venueLabel}, ${publication.venue.year}` : venueLabel}
+        {`${venueLabel}, ${publication.venue.year}`}
       </p>
 
       {publication.awards && publication.awards.length > 0 ? (

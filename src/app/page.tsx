@@ -14,7 +14,7 @@ export default function HomePage() {
   return (
     <>
       <Hero
-        eyebrow="Graduate Researcher"
+        eyebrow="Undergraduate Researcher"
         name={profile.name}
         location={profile.location}
         headline={profile.greeting.headline}

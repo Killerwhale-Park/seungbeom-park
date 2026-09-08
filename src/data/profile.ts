@@ -2,9 +2,9 @@ import type { Profile } from "@/lib/types";
 
 export const profile: Profile = {
   name: "Seungbeom Park",
-  title: "Graduate Student, Computer Science",
+  title: "Undergraduate Student, AI Computing",
   affiliation: {
-    department: "Department of Computer Science",
+    department: "School of AI Computing",
     institution: "KAIST",
   },
   location: "Seoul, South Korea",
@@ -14,7 +14,7 @@ export const profile: Profile = {
     headline:
       "Machine learning research with an engineer's habits: measure, build, ship, repeat.",
     paragraphs: [
-      "I am a graduate student in computer science based in Seoul. My work sits around machine learning: how models learn, where they fail, and how to turn what we learn about them into systems people can actually use. My first-author paper SkillCombiner was recently accepted to the REALM Workshop at EMNLP 2026, and a co-authored paper is under review at IEEE S&P 2027.",
+      "I am an undergraduate student in AI computing at KAIST. My work sits around machine learning: how models learn, where they fail, and how to turn what we learn about them into systems people can actually use. My first-author paper SkillCombiner was recently accepted to the REALM Workshop at EMNLP 2026, and a co-authored paper is under review at IEEE S&P 2027.",
       "Outside of research I write software for its own sake, this site included. If any of this overlaps with what you are working on, my inbox is open.",
     ],
   },

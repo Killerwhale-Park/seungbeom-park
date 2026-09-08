@@ -18,23 +18,6 @@ const predicates: Record<PublicationFilterId, (pub: Publication) => boolean> = {
 
 type ViewId = "sky" | "list";
 
-function groupByYear(pubs: Publication[]) {
-  const groups = new Map<number, Publication[]>();
-
-  for (const pub of pubs) {
-    const existing = groups.get(pub.venue.year);
-    if (existing) {
-      existing.push(pub);
-    } else {
-      groups.set(pub.venue.year, [pub]);
-    }
-  }
-
-  return [...groups.entries()]
-    .sort((a, b) => b[0] - a[0])
-    .map(([year, items]) => ({ year, items }));
-}
-
 function entryLabel(count: number) {
   return count === 1 ? "1 entry" : `${count} entries`;
 }
@@ -67,7 +50,6 @@ export function PublicationList({
   ];
 
   const filtered = publications.filter(predicates[active]);
-  const groups = groupByYear(filtered);
   const activeIds = new Set(filtered.map((pub) => pub.id));
 
   return (
@@ -117,36 +99,18 @@ export function PublicationList({
           activeIds={activeIds}
           className="mt-8"
         />
-      ) : groups.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <p className="mt-12 border-t border-white/10 pt-12 font-mono text-[12px] text-moon-500">
           Nothing here yet — check back after the review cycle.
         </p>
       ) : (
-        <div className="mt-12 flex flex-col gap-12">
-          {groups.map((group) => (
-            <section
-              key={group.year}
-              className="grid gap-6 border-t border-white/10 pt-10 first:border-t-0 first:pt-0 md:grid-cols-[7rem_1fr] md:gap-x-10"
-            >
-              <div className="md:sticky md:top-28 md:self-start">
-                <h2 className="font-display text-[2rem] font-bold leading-none tracking-[-0.02em] text-moon-500 md:text-[2.6rem]">
-                  {group.year}
-                </h2>
-                <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.2em] text-moon-700">
-                  {entryLabel(group.items.length)}
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-5">
-                {group.items.map((publication) => (
-                  <PublicationCard
-                    key={publication.id}
-                    publication={publication}
-                    reveal
-                  />
-                ))}
-              </div>
-            </section>
+        <div className="mt-12 flex flex-col gap-5">
+          {filtered.map((publication) => (
+            <PublicationCard
+              key={publication.id}
+              publication={publication}
+              reveal
+            />
           ))}
         </div>
       )}

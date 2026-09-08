@@ -2,19 +2,12 @@ import type { Education } from "@/lib/types";
 
 export const education: Education[] = [
   {
-    id: "ms-cs",
-    institution: "University Name",
-    degree: "M.S.",
-    field: "Computer Science",
-    period: { start: "2025-03", expected: "2027-02" },
-    gpa: { value: 4.3, scale: 4.5 },
-  },
-  {
-    id: "bs-cs",
-    institution: "University Name",
+    id: "bs-kaist",
+    institution: "KAIST",
     degree: "B.S.",
-    field: "Computer Science",
-    period: { start: "2019-03", end: "2025-02" },
-    gpa: { value: 4.1, scale: 4.5 },
+    field: "AI Computing",
+    period: { start: "2025-02", expected: "2028-02" },
+    gpa: { value: 3.81, scale: 4.3 },
+    notes: ["86 / 138 credits completed"],
   },
 ];
