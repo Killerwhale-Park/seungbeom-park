@@ -23,7 +23,12 @@ export default function HomePage() {
         github={profile.links.github}
       />
 
-      <div className="mx-auto max-w-6xl px-6 pb-16">
+      <div
+        aria-hidden="true"
+        className="h-24 bg-[linear-gradient(180deg,#04060c,transparent)]"
+      />
+
+      <div className="mx-auto -mt-24 max-w-6xl px-6 pb-16 pt-24">
         <Reveal>
           <AboutSection
             name={profile.name}

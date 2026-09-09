@@ -3,17 +3,17 @@
 @theme {
   --color-white: #ffffff;
 
-  --color-night-950: #04050c;
-  --color-night-900: #080a15;
-  --color-night-800: #0d1020;
-  --color-night-700: #141830;
-  --color-night-600: #1d2340;
+  --color-night-950: #0b0e19;
+  --color-night-900: #121629;
+  --color-night-800: #191e34;
+  --color-night-700: #212745;
+  --color-night-600: #2b3253;
 
-  --color-moon-50: #f4f5fb;
-  --color-moon-200: #d8dcee;
-  --color-moon-400: #9aa1c4;
-  --color-moon-500: #6f7699;
-  --color-moon-700: #464c6b;
+  --color-moon-50: #eef1f8;
+  --color-moon-200: #d4d9e9;
+  --color-moon-400: #a0a7c6;
+  --color-moon-500: #7d84a6;
+  --color-moon-700: #555c7e;
 
   --color-ember-200: #ffe9bd;
   --color-ember-300: #ffd98a;
@@ -33,18 +33,18 @@
 }
 
 :root {
-  --sky-a: #04050c;
-  --sky-b: #070a18;
-  --sky-c: #0a0d1c;
-  --sky-horizon: #171226;
+  --sky-a: #070a14;
+  --sky-b: #0a0d1c;
+  --sky-c: #0d1122;
+  --sky-horizon: #1a1630;
   --sky-glow: rgba(168, 100, 31, 0.2);
-  --scrim-a: rgba(4, 5, 12, 0.82);
-  --scrim-b: rgba(4, 5, 12, 0.45);
+  --scrim-a: rgba(7, 10, 20, 0.82);
+  --scrim-b: rgba(7, 10, 20, 0.45);
   --star-opacity: 1;
 
-  --panel-a: #04050c;
-  --panel-b: #080b18;
-  --panel-c: #12101f;
+  --panel-a: #070a14;
+  --panel-b: #0b0e1c;
+  --panel-c: #141223;
 
   --status-review: #ffd98a;
   --status-accepted: #8fd9b0;
