@@ -150,6 +150,7 @@ export type Experience = {
   role: string;
   period: Period;
   type: ExperienceType;
+  url?: string;
   description: string[];
 };
 

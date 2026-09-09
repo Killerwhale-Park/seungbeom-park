@@ -9,6 +9,7 @@ import { ArcRocket } from "@/components/effects/ArcRocket";
 import { BurstFx } from "@/components/effects/BurstFx";
 import { CopyBibtexButton } from "@/components/publications/CopyBibtexButton";
 import { ReviewPipeline } from "@/components/publications/ReviewPipeline";
+import { isFirstAuthor } from "@/lib/publications";
 
 export type PublicationCardVariant = "default" | "compact";
 
@@ -55,6 +56,8 @@ export function PublicationCard({
   useEffect(() => () => window.clearTimeout(burstTimer.current), []);
 
   const statusColor = STATUS_COLOR[publication.status];
+  const firstAuthor = isFirstAuthor(publication);
+  const featured = firstAuthor && !compact;
   const venueLabel = publication.venue.abbreviation
     ? `${publication.venue.name} (${publication.venue.abbreviation})`
     : publication.venue.name;
@@ -98,15 +101,26 @@ export function PublicationCard({
 
   const front = (
     <>
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+      <div
+        className={`flex flex-wrap items-center gap-x-3 gap-y-2 ${canReveal ? "pr-10" : ""}`}
+      >
         <StatusPill status={publication.status} />
+        <span aria-hidden="true" className="h-3 w-px bg-white/10" />
         <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-moon-500">
           {publication.type.toUpperCase()}
         </span>
+        {firstAuthor ? (
+          <>
+            <span aria-hidden="true" className="h-3 w-px bg-white/10" />
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ember-400">
+              First author
+            </span>
+          </>
+        ) : null}
       </div>
 
       <h3
-        className={`mt-4 font-display font-semibold leading-snug tracking-[-0.015em] text-moon-50 ${compact ? "text-[1.0625rem]" : "text-[1.2rem] sm:text-[1.3rem]"} ${canReveal ? "pr-10" : ""}`}
+        className={`mt-4 font-display font-semibold leading-snug tracking-[-0.015em] text-moon-50 ${compact ? "text-[1.0625rem]" : featured ? "text-[1.4rem] sm:text-[1.55rem]" : "text-[1.2rem] sm:text-[1.3rem]"} ${canReveal ? "pr-10" : ""}`}
       >
         {publication.title}
       </h3>
@@ -118,7 +132,7 @@ export function PublicationCard({
       ) : null}
 
       <p
-        className={`text-[14px] leading-relaxed text-moon-400 ${compact ? "mt-3" : "mt-4"}`}
+        className={`text-[14px] leading-relaxed text-moon-300 ${compact ? "mt-3" : "mt-4"}`}
       >
         {publication.authors.map((author, index) => (
           <span key={`${publication.id}-author-${index}`}>
@@ -140,8 +154,9 @@ export function PublicationCard({
         ))}
       </p>
 
-      <p className="mt-2 font-mono text-[12px] leading-relaxed text-moon-500">
-        {`${venueLabel}, ${publication.venue.year}`}
+      <p className="mt-2.5 font-mono text-[12.5px] leading-relaxed text-moon-300">
+        {venueLabel}
+        <span className="text-moon-500">{` · ${publication.venue.year}`}</span>
       </p>
 
       {publication.awards && publication.awards.length > 0 ? (
@@ -161,11 +176,19 @@ export function PublicationCard({
     </>
   );
 
+  const featuredRule = featured ? (
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-ember-400/80 via-ember-500/30 to-transparent"
+    />
+  ) : null;
+
   if (!canReveal) {
     return (
       <article
-        className={`flex flex-col rounded-[2px] border border-white/8 bg-night-900 transition-[border-color,box-shadow] duration-300 hover:border-ember-500/30 hover:shadow-[0_0_40px_-12px_rgba(217,143,53,0.45)] ${compact ? "p-5" : "p-6 sm:p-7"} ${className ?? ""}`}
+        className={`relative flex flex-col overflow-hidden rounded-[2px] border bg-night-900 transition-[border-color,box-shadow] duration-300 hover:border-ember-500/30 hover:shadow-[0_0_40px_-12px_rgba(217,143,53,0.45)] ${featured ? "border-white/12" : "border-white/8"} ${compact ? "p-5" : "p-6 sm:p-7"} ${className ?? ""}`}
       >
+        {featuredRule}
         {front}
       </article>
     );
@@ -174,8 +197,9 @@ export function PublicationCard({
   return (
     <article
       ref={cardRef}
-      className={`relative overflow-hidden rounded-[2px] border border-white/8 bg-night-900 transition-[border-color,box-shadow] duration-300 hover:border-ember-500/30 hover:shadow-[0_0_40px_-12px_rgba(217,143,53,0.45)] ${className ?? ""}`}
+      className={`relative overflow-hidden rounded-[2px] border bg-night-900 transition-[border-color,box-shadow] duration-300 hover:border-ember-500/30 hover:shadow-[0_0_40px_-12px_rgba(217,143,53,0.45)] ${featured ? "border-white/12" : "border-white/8"} ${className ?? ""}`}
     >
+      {featuredRule}
       <div className="grid">
         <div
           inert={open || undefined}

@@ -5,6 +5,6 @@ export const testScores: TestScore[] = [
     id: "toefl-ibt",
     test: "TOEFL iBT",
     score: "91",
-    date: "2026",
+    date: "2025-06",
   },
 ];

@@ -14,7 +14,18 @@ export function CvExperience({ items }: CvExperienceProps) {
           <CvEntryTitle>{item.role}</CvEntryTitle>
 
           <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <p className="text-[15px] text-moon-200">{item.organization}</p>
+            {item.url ? (
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[15px] text-moon-200 underline decoration-white/20 underline-offset-4 transition-colors hover:text-ember-300 hover:decoration-ember-500/50"
+              >
+                {item.organization}
+              </a>
+            ) : (
+              <p className="text-[15px] text-moon-200">{item.organization}</p>
+            )}
             <span className="cv-type-tag font-mono text-[11px] uppercase tracking-[0.14em] text-moon-500">
               {item.type}
             </span>
